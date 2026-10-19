@@ -25,6 +25,5 @@ public class CameraRotate : MonoBehaviour
 
         //4. 누적한 회전값을 카메라에 적용한다.
         transform.eulerAngles = new Vector3(-_accumulationY, _accumulationX, 0f);
-
     }
 }
