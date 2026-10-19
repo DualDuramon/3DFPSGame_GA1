@@ -39,18 +39,18 @@ jobs:
               --unified=80 \
               "${COMMIT_SHA}^" \
               "${COMMIT_SHA}" \
-              -- ':(glob)Assets/02.Scripts/**/*.cs' > commit.diff
+              -- ':(glob)Assets/02_Scripts/**/*.cs' > commit.diff
           else
             git show \
               --format= \
               --no-ext-diff \
               --unified=80 \
               "${COMMIT_SHA}" \
-              -- ':(glob)Assets/02.Scripts/**/*.cs' > commit.diff
+              -- ':(glob)Assets/02_Scripts/**/*.cs' > commit.diff
           fi
 
           if [[ ! -s commit.diff ]]; then
-            echo "Assets/02.Scripts에서 리뷰할 C# 변경사항이 없습니다."
+            echo "Assets/02_Scripts에서 리뷰할 C# 변경사항이 없습니다."
             exit 1
           fi
 
@@ -68,7 +68,7 @@ jobs:
             현재 저장소의 최신 커밋을 코드 리뷰하세요.
 
             반드시 먼저 commit.diff 파일을 읽고,
-            Assets/02.Scripts 폴더에 포함된 C# 변경사항을 검토하세요.
+            Assets/02_Scripts 폴더에 포함된 C# 변경사항을 검토하세요.
 
             저장소의 GEMINI.md와 GEMINI.md에서 가져온
             코드 리뷰 기준을 반드시 적용하세요.
