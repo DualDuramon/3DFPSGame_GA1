@@ -2,11 +2,12 @@ using UnityEngine;
 
 
 /// <summary>
-/// 키보드 방향키에 따라 그 방향으로 이동하고 싶음.
+/// 카메라를 기준으로 키보드 입력 방향에 따라 지면 위에서 이동합니다.
 /// </summary>
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private CharacterController _characterController;
+    [SerializeField] private Transform _movementCamera;
     [SerializeField] private float _moveSpeed = 1f;
 
     private void Awake()
@@ -15,21 +16,33 @@ public class PlayerMove : MonoBehaviour
         {
             _characterController = GetComponent<CharacterController>();
         }
+
+        if (_movementCamera == null)
+        {
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                _movementCamera = mainCamera.transform;
+            }
+        }
+
+        if (_characterController == null || _movementCamera == null)
+        {
+            GameLogger.LogWarning($"{nameof(PlayerMove)}: CharacterController와 이동 기준 Camera가 필요합니다.");
+            enabled = false;
+        }
     }
 
     private void Update()
     {
-        //1. 입력을 받는다
-
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        //2. 방향을 구한다
-        Vector3 direction = new Vector3(h, 0, v).normalized;
-        direction = transform.TransformDirection(direction); //자기자신(transform)을 중심으로 direction을 변환하고 이걸 다시 World기준으로 반환
+        // 카메라의 오른쪽을 기준으로 계산하면 수직 탑다운에서도 전진 방향이 유지됩니다.
+        Vector3 right = Vector3.ProjectOnPlane(_movementCamera.right, Vector3.up).normalized;
+        Vector3 forward = Vector3.Cross(right, Vector3.up);
+        Vector3 direction = (right * h + forward * v).normalized;
 
-        //3. 방향과 속력에 따라 이동한다.
-        //transform.position += direction * _moveSpeed * Time.deltaTime;
         _characterController.Move(direction * _moveSpeed * Time.deltaTime);
     }
 }

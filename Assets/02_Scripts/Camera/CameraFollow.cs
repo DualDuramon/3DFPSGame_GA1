@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (_followTarget == null)
         {
-            Debug.LogWarning($"{typeof(CameraFollow).Name} : Target이 안보임");
+            GameLogger.LogWarning($"{typeof(CameraFollow).Name} : Target이 안보임");
         }
 
         transform.position = _followTarget.position;

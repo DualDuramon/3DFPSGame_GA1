@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
-  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -267,23 +266,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4112467793d2ea346ba2868ff2267d9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 17dadc390bad4abf8f21cb994316b0de, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraRotate
-  _rotationSpeed: 200
---- !u!114 &330585549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d352e4ee3ffb1d6428807ad5a93af9ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
+  m_EditorClassIdentifier: Assembly-CSharp::CameraView.CameraViewSwitcher
+  _player: {fileID: 1429056564}
   _followTarget: {fileID: 1084035757}
+  _rotationSpeed: 200
+  _pitchLimit: 80
+  _fieldOfView: 60
+  _thirdPersonDistance: 4
+  _shoulderOffset: {x: 0.7, y: -0.25, z: -2.5}
+  _quarterAngles: {x: 45, y: 45}
+  _quarterDistance: 10
+  _isometricAngles: {x: 35.264, y: 45}
+  _isometricDistance: 10
+  _isometricSize: 5
+  _topDownHeight: 12
+  _topDownSize: 7
 --- !u!1 &330988418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,7 +1215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648da0635c6648842b028da91f74fc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRotate
-  _rotationSpeed: 200
+  _rotationSpeed: 360
 --- !u!114 &1429056566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,6 +1229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   _characterController: {fileID: 0}
+  _movementCamera: {fileID: 330585546}
   _moveSpeed: 5
 --- !u!143 &1429056567
 CharacterController:
