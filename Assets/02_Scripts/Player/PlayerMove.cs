@@ -9,12 +9,15 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
     [SerializeField] private float _moveSpeed = 1f;
+    private float _sprintSpeed = 12f;
+
     [SerializeField] private float _jumpPower = 7f;
+    private int _jumpCount = 0;
+    private int _maxJumps = 2;
 
     private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
 
-    private float _sprintSpeed = 12f;
 
     private void Awake()
     {
@@ -59,15 +62,19 @@ public class PlayerMove : MonoBehaviour
         else
         {
             _yVelocity = -1f;
+            _jumpCount = 0;
         }
 
-        if (Input.GetButtonDown("Jump") && _characterController.isGrounded) //중재자 패턴   
+        if (Input.GetButtonDown("Jump")) //중재자 패턴   
         {
-            _yVelocity = _jumpPower;
+            if (_characterController.isGrounded || _jumpCount < _maxJumps)
+            {
+                _yVelocity = _jumpPower;
+                _jumpCount++;
+            }
         }
 
         direction.y = _yVelocity;
-
         _characterController.Move(direction * Time.deltaTime);
     }
 }
