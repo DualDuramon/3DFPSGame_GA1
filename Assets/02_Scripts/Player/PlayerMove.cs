@@ -6,19 +6,33 @@ using UnityEngine;
 /// </summary>
 public class PlayerMove : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
+
+    [Header("Move Control")]
     [SerializeField] private float _moveSpeed = 1f;
     [SerializeField] private float _runSpeed = 12f;
-    [SerializeField] private float _jumpPower = 7f;
 
+
+    [Header("Jump Control")]
+    [SerializeField] private float _jumpPower = 7f;
+    [SerializeField] private int _maxJumpCount = 2;
+    private int _currentJumpCount = 0;
     private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
 
-    [SerializeField] private int _currentJumpCount = 0;
-    [SerializeField] private int _maxJumpCount = 2;
+    [Header("Stamina Control")]
+    [SerializeField] private float _maxStamina = 100f;
+    [SerializeField] private float _staminaRestoreRate = 100f;
+    [SerializeField] private float _runStaminaDecresementRate = 10f;
+    [SerializeField] private float _jumpStaminaDecresement = 30f;
+    [SerializeField] private float _currentStamina = 100f;
+    [SerializeField] private bool _needSomeRest = false;
+    private const float Fully_Rested_Normal = 5f;
 
 
+    public float CurrentStaminaRatio => _currentStamina / _maxStamina;
     private void Awake()
     {
         if (_characterController == null)
@@ -47,18 +61,24 @@ public class PlayerMove : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        // 카메라의 오른쪽을 기준으로 계산하면 수직 탑다운에서도 전진 방향이 유지됩니다.
         Vector3 right = Vector3.ProjectOnPlane(_movementCamera.right, Vector3.up).normalized;
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
-        if (Input.GetButton("LeftShift"))
+        if (Input.GetButton("LeftShift") && !_needSomeRest && direction != Vector3.zero)
         {
             direction *= _runSpeed;
+            _currentStamina -= _runStaminaDecresementRate * Time.deltaTime;
+
+            if (_currentStamina < 0f)
+            {
+                _needSomeRest = true;
+            }
         }
         else
         {
             direction *= _moveSpeed;
+            HandleRestoreStaminaPerRate();
         }
 
 
@@ -72,15 +92,27 @@ public class PlayerMove : MonoBehaviour
             _currentJumpCount = 0;
         }
 
-        if (Input.GetButtonDown("Jump")) //중재자 패턴   
+        if (Input.GetButtonDown("Jump") && !_needSomeRest && _currentStamina > _jumpStaminaDecresement) //중재자 패턴   
         {
             if (_characterController.isGrounded || _currentJumpCount < _maxJumpCount)
             {
                 _yVelocity = _jumpPower;
                 _currentJumpCount++;
+                _currentStamina -= _jumpStaminaDecresement;
             }
         }
         direction.y = _yVelocity;
         _characterController.Move(direction * Time.deltaTime);
+
+    }
+
+    private void HandleRestoreStaminaPerRate()
+    {
+        _currentStamina = Mathf.Clamp(_currentStamina + _staminaRestoreRate * Time.deltaTime, 0f, 100f);
+
+        if (_needSomeRest && _currentStamina > Fully_Rested_Normal)
+        {
+            _needSomeRest = false;
+        }
     }
 }
