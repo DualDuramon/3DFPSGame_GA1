@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerGunFire : MonoBehaviour
 {
     [SerializeField] private float _range = 100f;
-    [SerializeField] Transform _firePosition;
+    [SerializeField] private ParticleSystem _hitEffectPrefab;
     private float _damage = 10f;
 
 
@@ -35,6 +35,9 @@ public class PlayerGunFire : MonoBehaviour
         {
             GameLogger.Log($"{hitInfo.collider.name}이 총알을 맞음. 대미지 : {_damage}");
             //TODO : 파편 이펙트 생성
+            ParticleSystem effect = Instantiate(_hitEffectPrefab, hitInfo.point, Quaternion.identity);
+            effect.transform.forward = hitInfo.normal;
+            effect.Play();
         }
     }
 }
