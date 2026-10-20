@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 79528462}
   - component: {fileID: 79528461}
   m_Layer: 0
-  m_Name: Barrel (1)
+  m_Name: HandGuard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,8 +147,8 @@ Transform:
   m_GameObject: {fileID: 79528459}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.378, z: 0.418}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.78}
+  m_LocalPosition: {x: 0, y: 0.384, z: 0.51}
+  m_LocalScale: {x: 0.13, y: 0.1, z: 0.78}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1999493716}
@@ -199,7 +199,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 43fa877eb5502524399cbe75d1d82227, type: 2}
+  - {fileID: 2100000, guid: 2a52a8451e16129429587297186345ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1825,7 +1825,7 @@ Transform:
   m_GameObject: {fileID: 1158171189}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.491, z: 0.866}
+  m_LocalPosition: {x: 0, y: 0.491, z: 0.958}
   m_LocalScale: {x: 0.05, y: 0.1, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2382,6 +2382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4833f7fd82dcf43ba1df7653128937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGunFire
+  _fireInterval: 0.1
   _range: 100
   _hitEffectPrefab: {fileID: 19800002, guid: 54dd9cb5740188a488b8baebbf19207c, type: 3}
 --- !u!1 &1444504119
@@ -2524,7 +2525,7 @@ Transform:
   m_GameObject: {fileID: 1676750770}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.445, z: 0.55799997}
+  m_LocalPosition: {x: 0, y: 0.445, z: 0.65}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.78}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -5,15 +5,21 @@ using UnityEngine;
 /// </summary>
 public class PlayerGunFire : MonoBehaviour
 {
+    [SerializeField] private float _fireInterval = 0.1f;
+    private float _currentFireTime = 0f;
     [SerializeField] private float _range = 100f;
     [SerializeField] private ParticleSystem _hitEffectPrefab;
     private float _damage = 10f;
 
+    private void Awake()
+    {
+        _currentFireTime = 0f;
+    }
 
     private void Update()
     {
         //1. 마우스 오른쪽 버튼 입력 받기
-        if (Input.GetButtonDown("Fire1")) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
+        if (Input.GetButton("Fire1") && Time.time - _currentFireTime > _fireInterval) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
             Shoot();
         }
@@ -39,5 +45,7 @@ public class PlayerGunFire : MonoBehaviour
             effect.transform.forward = hitInfo.normal;
             effect.Play();
         }
+
+        _currentFireTime = Time.time;
     }
 }
