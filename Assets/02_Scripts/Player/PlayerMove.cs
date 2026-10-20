@@ -9,6 +9,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
     [SerializeField] private float _moveSpeed = 1f;
+    private const float Gravity = -20;
+    private float _yVelocity = 0f;
 
     private void Awake()
     {
@@ -43,6 +45,10 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
-        _characterController.Move(direction * _moveSpeed * Time.deltaTime);
+        direction *= _moveSpeed;
+        _yVelocity += Gravity;
+        direction.y = _yVelocity;
+
+        _characterController.Move(direction * Time.deltaTime);
     }
 }
