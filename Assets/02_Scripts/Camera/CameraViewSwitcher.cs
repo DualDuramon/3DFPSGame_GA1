@@ -137,6 +137,7 @@ namespace CameraView
         {
             for (int i = 0; i < _playerRenderers.Length; i++)
             {
+                if (_playerRenderers[i] == null) continue;
                 _playerRenderers[i].enabled = visible && _originalRendererStates[i];
             }
         }

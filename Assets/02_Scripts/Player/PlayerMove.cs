@@ -6,17 +6,27 @@ using UnityEngine;
 /// </summary>
 public class PlayerMove : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
+
+    [Header("Movement")]
     [SerializeField] private float _moveSpeed = 1f;
     private float _sprintSpeed = 12f;
 
+    [Header("Jump")]
     [SerializeField] private float _jumpPower = 7f;
+    [SerializeField] private int _maxJumps = 2;
     private int _jumpCount = 0;
-    private int _maxJumps = 2;
-
     private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
+
+    [Header("Stamina")]
+    [SerializeField] private float _maxStamina;
+    private float _currentStamina;
+    [SerializeField] private float _staminaRecovery = 15f;
+    [SerializeField] private float _sprintCost = 20f;
+    [SerializeField] private float _jumpCost = 20f;
 
 
     private void Awake()
@@ -40,10 +50,15 @@ public class PlayerMove : MonoBehaviour
             GameLogger.LogWarning($"{nameof(PlayerMove)}: CharacterController와 이동 기준 Camera가 필요합니다.");
             enabled = false;
         }
+
+        _currentStamina = _maxStamina;
     }
 
     private void Update()
     {
+
+        _currentStamina = Mathf.Min(_maxStamina, _currentStamina + _staminaRecovery * Time.deltaTime);
+
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
@@ -52,12 +67,21 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
-        float currentSpeed = Input.GetButton("Sprint") ? _sprintSpeed : _moveSpeed;
+
+        float needStamina = _sprintCost * Time.deltaTime;
+        bool isSprint = Input.GetButton("Sprint") && (_currentStamina >= needStamina);
+        float currentSpeed = isSprint ? _sprintSpeed : _moveSpeed;
+        if (isSprint)
+        {
+            _currentStamina -= needStamina;
+        }
+
         direction *= currentSpeed;
 
         if (!_characterController.isGrounded)
         {
             _yVelocity += Gravity * Time.deltaTime;
+
         }
         else
         {
@@ -65,13 +89,11 @@ public class PlayerMove : MonoBehaviour
             _jumpCount = 0;
         }
 
-        if (Input.GetButtonDown("Jump")) //중재자 패턴   
+        if (Input.GetButtonDown("Jump") && _jumpCount < _maxJumps && _currentStamina >= _jumpCost) //중재자 패턴   
         {
-            if (_characterController.isGrounded || _jumpCount < _maxJumps)
-            {
-                _yVelocity = _jumpPower;
-                _jumpCount++;
-            }
+            _yVelocity = _jumpPower;
+            _jumpCount++;
+            _currentStamina -= _jumpCost;
         }
 
         direction.y = _yVelocity;
