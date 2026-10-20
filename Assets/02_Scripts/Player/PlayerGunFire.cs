@@ -5,9 +5,10 @@ using UnityEngine;
 /// </summary>
 public class PlayerGunFire : MonoBehaviour
 {
-    [SerializeField]
-    private float _range = 100f;
+    [SerializeField] private float _range = 100f;
+    [SerializeField] Transform _firePosition;
     private float _damage = 10f;
+
 
     private void Update()
     {
