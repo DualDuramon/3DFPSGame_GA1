@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
 
+    private float _sprintSpeed = 12f;
 
     private void Awake()
     {
@@ -48,22 +49,25 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
+        float currentSpeed = Input.GetButton("Sprint") ? _sprintSpeed : _moveSpeed;
+        direction *= currentSpeed;
+
         if (!_characterController.isGrounded)
         {
             _yVelocity += Gravity * Time.deltaTime;
         }
         else
         {
-            if (Input.GetButtonDown("Jump")) //중재자 패턴   
-            {
-                _yVelocity = _jumpPower;
-            }
+            _yVelocity = -1f;
         }
 
-        direction.x *= _moveSpeed * Time.deltaTime;
-        direction.y = _yVelocity;
-        direction.z *= _moveSpeed * Time.deltaTime;
+        if (Input.GetButtonDown("Jump") && _characterController.isGrounded) //중재자 패턴   
+        {
+            _yVelocity = _jumpPower;
+        }
 
-        _characterController.Move(direction);
+        direction.y = _yVelocity;
+
+        _characterController.Move(direction * Time.deltaTime);
     }
 }
