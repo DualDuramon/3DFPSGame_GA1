@@ -9,10 +9,14 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
     [SerializeField] private float _moveSpeed = 1f;
+    [SerializeField] private float _runSpeed = 12f;
     [SerializeField] private float _jumpPower = 7f;
 
     private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
+
+    [SerializeField] private int _currentJumpCount = 0;
+    [SerializeField] private int _maxJumpCount = 2;
 
 
     private void Awake()
@@ -48,22 +52,35 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
+        if (Input.GetButton("LeftShift"))
+        {
+            direction *= _runSpeed;
+        }
+        else
+        {
+            direction *= _moveSpeed;
+        }
+
+
         if (!_characterController.isGrounded)
         {
             _yVelocity += Gravity * Time.deltaTime;
         }
         else
         {
-            if (Input.GetButtonDown("Jump")) //중재자 패턴   
-            {
-                _yVelocity = _jumpPower;
-            }
+            _yVelocity = 0f;
+            _currentJumpCount = 0;
         }
 
-        direction.x *= _moveSpeed * Time.deltaTime;
+        if (Input.GetButtonDown("Jump")) //중재자 패턴   
+        {
+            if (_characterController.isGrounded || _currentJumpCount < _maxJumpCount)
+            {
+                _yVelocity = _jumpPower;
+                _currentJumpCount++;
+            }
+        }
         direction.y = _yVelocity;
-        direction.z *= _moveSpeed * Time.deltaTime;
-
-        _characterController.Move(direction);
+        _characterController.Move(direction * Time.deltaTime);
     }
 }
