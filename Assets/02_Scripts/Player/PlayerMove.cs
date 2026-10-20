@@ -9,8 +9,11 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
     [SerializeField] private float _moveSpeed = 1f;
-    private const float Gravity = -20;
+    [SerializeField] private float _jumpPower = 7f;
+
+    private const float Gravity = -9.81f;
     private float _yVelocity = 0f;
+
 
     private void Awake()
     {
@@ -45,10 +48,22 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
-        direction *= _moveSpeed;
-        _yVelocity += Gravity;
-        direction.y = _yVelocity;
+        if (!_characterController.isGrounded)
+        {
+            _yVelocity += Gravity * Time.deltaTime;
+        }
+        else
+        {
+            if (Input.GetButtonDown("Jump")) //중재자 패턴   
+            {
+                _yVelocity = _jumpPower;
+            }
+        }
 
-        _characterController.Move(direction * Time.deltaTime);
+        direction.x *= _moveSpeed * Time.deltaTime;
+        direction.y = _yVelocity;
+        direction.z *= _moveSpeed * Time.deltaTime;
+
+        _characterController.Move(direction);
     }
 }

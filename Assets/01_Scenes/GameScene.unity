@@ -1433,6 +1433,7 @@ MonoBehaviour:
   _characterController: {fileID: 0}
   _movementCamera: {fileID: 330585546}
   _moveSpeed: 5
+  _jumpPower: 5
 --- !u!143 &1429056567
 CharacterController:
   m_ObjectHideFlags: 0
