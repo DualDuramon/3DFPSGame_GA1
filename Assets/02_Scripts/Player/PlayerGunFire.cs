@@ -1,3 +1,5 @@
+using Lean.Pool;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -5,23 +7,51 @@ using UnityEngine;
 /// </summary>
 public class PlayerGunFire : MonoBehaviour
 {
+    [Header("Firing")]
+    [SerializeField] private float _damage = 10f;
     [SerializeField] private float _fireInterval = 0.1f;
-    private float _currentFireTime = 0f;
     [SerializeField] private float _range = 100f;
+
+    [Header("Reloading")]
+    [SerializeField] private int _maxBulletCount = 30;
+    [SerializeField] private float _reloadingTime = 3f;
+
+    [Header("Particles")]
     [SerializeField] private ParticleSystem _hitEffectPrefab;
-    private float _damage = 10f;
+
+    private bool _isReloading => _reloadCoroutine != null;
+    private int _bulletCount = 0;
+    private float _currentFireTime = 0f;
+    private Coroutine _reloadCoroutine;
 
     private void Awake()
     {
         _currentFireTime = 0f;
+        _bulletCount = _maxBulletCount;
     }
 
     private void Update()
     {
         //1. 마우스 오른쪽 버튼 입력 받기
-        if (Input.GetButton("Fire1") && Time.time - _currentFireTime > _fireInterval) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
+        if (Input.GetButton("Fire1")
+            && Time.time - _currentFireTime > _fireInterval
+            && _bulletCount > 0) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
             Shoot();
+            _bulletCount--;
+            _currentFireTime = Time.time;
+
+            if (_isReloading)
+            {
+                StopCoroutine(_reloadCoroutine);
+                _reloadCoroutine = null;
+            }
+        }
+
+        //2. R키 누르면 총알 재장전
+        if (Input.GetButtonDown("Reload") && !_isReloading)
+        {
+            _reloadCoroutine = StartCoroutine(Reloading_Coroutine());
         }
     }
 
@@ -40,12 +70,18 @@ public class PlayerGunFire : MonoBehaviour
         if (isHit)
         {
             GameLogger.Log($"{hitInfo.collider.name}이 총알을 맞음. 대미지 : {_damage}");
-            //TODO : 파편 이펙트 생성
-            ParticleSystem effect = Instantiate(_hitEffectPrefab, hitInfo.point, Quaternion.identity);
-            effect.transform.forward = hitInfo.normal;
-            effect.Play();
+            if (_hitEffectPrefab != null)
+            {
+                LeanPool.Spawn(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            }
         }
+    }
 
-        _currentFireTime = Time.time;
+    private IEnumerator Reloading_Coroutine()
+    {
+        yield return new WaitForSeconds(_reloadingTime);
+
+        _bulletCount = _maxBulletCount;
+        _reloadCoroutine = null;
     }
 }

@@ -1,12 +1,14 @@
+using Lean.Pool;
 using UnityEngine;
 
 /// <summary>
 /// 무언가에 부딪히면 폭발 이펙트를 남기고 사라지는 bomb
 /// </summary>
-public class BombProjectile : MonoBehaviour
+public class BombProjectile : MonoBehaviour, IPoolable
 {
     [SerializeField] private ParticleSystem _explosionEffectPrefab;
     [SerializeField] private Rigidbody _rigid;
+    private bool _hasExploded;
 
     private void Awake()
     {
@@ -18,11 +20,33 @@ public class BombProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        ParticleSystem effect = Instantiate(_explosionEffectPrefab, transform.position, Quaternion.identity);
+        if (_hasExploded) return;
+        _hasExploded = true;
 
-        effect.Play();
-        //TODO : 오브젝트 풀링 적용
-        Destroy(gameObject);
+        if (_explosionEffectPrefab != null)
+        {
+            LeanPool.Spawn(_explosionEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        LeanPool.Despawn(gameObject);
+    }
+
+    public void OnSpawn()
+    {
+        _hasExploded = false;
+        ResetMotion();
+    }
+
+    public void OnDespawn()
+    {
+        _hasExploded = true;
+        ResetMotion();
+    }
+
+    private void ResetMotion()
+    {
+        _rigid.linearVelocity = Vector3.zero;
+        _rigid.angularVelocity = Vector3.zero;
     }
 
     public void Throw(Vector3 throwVector)

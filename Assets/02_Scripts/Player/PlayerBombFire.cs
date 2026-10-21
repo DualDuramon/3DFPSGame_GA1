@@ -1,3 +1,4 @@
+using Lean.Pool;
 using UnityEngine;
 
 /// <summary>
@@ -17,7 +18,8 @@ public class PlayerBombFire : MonoBehaviour
     private float _currentThrowPower = 0f;
     private int _currentBombCount = 0;
 
-    private bool _isBombFused = false;
+    private bool _isCharging = false;
+
 
     private void Awake()
     {
@@ -28,43 +30,47 @@ public class PlayerBombFire : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire2") && _currentBombCount > 0)
         {
-            _isBombFused = true;
+            _isCharging = true;
             _currentThrowPower = _minThrowPower;
         }
 
-        if (_isBombFused)
+        if (_isCharging)
         {
             _currentThrowPower = Mathf.Min(_currentThrowPower + _throwPowerIncreaseRatio * Time.deltaTime, _maxThrowPower);
         }
 
-        if (Input.GetButtonUp("Fire2") && _isBombFused)
+        if (Input.GetButtonUp("Fire2") && _isCharging)
         {
             ThrowBomb();
-            _isBombFused = false;
+            _isCharging = false;
         }
 
     }
 
     private void ThrowBomb()
     {
-        ThrowProjectile(_grenadePrefab);
-        _currentBombCount--;
+        if (ThrowProjectile(_grenadePrefab))
+        {
+            _currentBombCount--;
+        }
     }
-    private void ThrowProjectile(GameObject projectilePrefab)
+    private bool ThrowProjectile(GameObject projectilePrefab)
     {
         if (projectilePrefab == null)
         {
             GameLogger.LogWarning($"{nameof(PlayerBombFire)} : 전달받은 projectilePrefab null입니다.");
-            return;
+            return false;
         }
 
-        GameObject generated = Instantiate(projectilePrefab, _throwPosition.position, Quaternion.identity);
+        GameObject generated = LeanPool.Spawn(projectilePrefab, _throwPosition.position, Quaternion.identity);
+        if (generated == null) return false;
 
         if (generated.TryGetComponent(out BombProjectile proj))
         {
             proj.Throw(Camera.main.transform.forward * _currentThrowPower);
         }
 
+        return true;
     }
 
 }
