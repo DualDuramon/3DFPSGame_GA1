@@ -130,7 +130,6 @@ GameObject:
   - component: {fileID: 79528460}
   - component: {fileID: 79528463}
   - component: {fileID: 79528462}
-  - component: {fileID: 79528461}
   m_Layer: 0
   m_Name: HandGuard
   m_TagString: Untagged
@@ -153,27 +152,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &79528461
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 79528459}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &79528462
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -242,7 +220,7 @@ GameObject:
   - component: {fileID: 267389259}
   - component: {fileID: 267389261}
   - component: {fileID: 267389260}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 321653739}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftWing_pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -879,7 +857,6 @@ GameObject:
   - component: {fileID: 410556603}
   - component: {fileID: 410556606}
   - component: {fileID: 410556605}
-  - component: {fileID: 410556604}
   m_Layer: 0
   m_Name: IronSight_back (1)
   m_TagString: Untagged
@@ -902,27 +879,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &410556604
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410556602}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &410556605
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1092,6 +1048,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1861484232}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &556105407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 556105408}
+  m_Layer: 6
+  m_Name: ThrowPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &556105408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556105407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.668, z: 0.987}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1429056564}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &609588798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,7 +1091,7 @@ GameObject:
   - component: {fileID: 609588802}
   - component: {fileID: 609588801}
   - component: {fileID: 609588800}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1228,13 +1215,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 664354233}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.2701753, w: 0.96281123}
-  m_LocalPosition: {x: 0.462, y: 0.382, z: 0.784}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.06194344, y: 0.0048986874, z: 0.07868423, w: 0.9949612}
+  m_LocalPosition: {x: -0.031431407, y: 0.1588463, z: 0.28017336}
+  m_LocalScale: {x: 4.8169107, y: 1.9996388, z: 1.0077518}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1999493716}
-  m_Father: {fileID: 1429056564}
+  m_Father: {fileID: 1858850211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 31.349}
 --- !u!1 &791673122
 GameObject:
@@ -1357,7 +1344,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 807842997}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightWing_pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1575,7 +1562,6 @@ GameObject:
   - component: {fileID: 979011168}
   - component: {fileID: 979011171}
   - component: {fileID: 979011170}
-  - component: {fileID: 979011169}
   m_Layer: 0
   m_Name: Magazin
   m_TagString: Untagged
@@ -1598,27 +1584,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!65 &979011169
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 979011167}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &979011170
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1685,7 +1650,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1084035757}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1718,7 +1683,7 @@ GameObject:
   - component: {fileID: 1110058388}
   - component: {fileID: 1110058390}
   - component: {fileID: 1110058389}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftWing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1808,7 +1773,6 @@ GameObject:
   - component: {fileID: 1158171190}
   - component: {fileID: 1158171193}
   - component: {fileID: 1158171192}
-  - component: {fileID: 1158171191}
   m_Layer: 0
   m_Name: IronSight_foward
   m_TagString: Untagged
@@ -1831,27 +1795,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1158171191
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158171189}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1158171192
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1921,7 +1864,7 @@ GameObject:
   - component: {fileID: 1215002184}
   - component: {fileID: 1215002183}
   - component: {fileID: 1215002182}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2228,7 +2171,8 @@ GameObject:
   - component: {fileID: 1429056565}
   - component: {fileID: 1429056566}
   - component: {fileID: 1429056568}
-  m_Layer: 0
+  - component: {fileID: 1429056569}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2307,8 +2251,8 @@ Transform:
   m_Children:
   - {fileID: 1084035757}
   - {fileID: 1606688553}
-  - {fileID: 664354234}
   - {fileID: 1444504120}
+  - {fileID: 556105408}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1429056565
@@ -2385,6 +2329,21 @@ MonoBehaviour:
   _fireInterval: 0.1
   _range: 100
   _hitEffectPrefab: {fileID: 19800002, guid: 54dd9cb5740188a488b8baebbf19207c, type: 3}
+--- !u!114 &1429056569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429056560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebf09772fd30a4e47a767be9d17435af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBombFire
+  _grenadePrefab: {fileID: 7697214890902402798, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+  _throwPosition: {fileID: 556105408}
+  _throwPower: 5
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0
@@ -2394,10 +2353,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1444504120}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FirePosition
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2469,7 +2428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1606688553}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2508,7 +2467,6 @@ GameObject:
   - component: {fileID: 1676750771}
   - component: {fileID: 1676750774}
   - component: {fileID: 1676750773}
-  - component: {fileID: 1676750772}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -2531,27 +2489,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1676750772
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1676750770}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1676750773
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2620,7 +2557,6 @@ GameObject:
   - component: {fileID: 1778618269}
   - component: {fileID: 1778618272}
   - component: {fileID: 1778618271}
-  - component: {fileID: 1778618270}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -2643,27 +2579,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1778618270
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778618268}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1778618271
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2807,7 +2722,7 @@ GameObject:
   - component: {fileID: 1858850211}
   - component: {fileID: 1858850213}
   - component: {fileID: 1858850212}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftWing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2826,7 +2741,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 0.20000002, y: 0.50000006, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 664354234}
   m_Father: {fileID: 321653739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1858850212
@@ -2931,7 +2847,6 @@ GameObject:
   - component: {fileID: 1925586807}
   - component: {fileID: 1925586810}
   - component: {fileID: 1925586809}
-  - component: {fileID: 1925586808}
   m_Layer: 0
   m_Name: IronSight_back (2)
   m_TagString: Untagged
@@ -2954,27 +2869,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1925586808
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1925586806}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1925586809
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3082,7 +2976,6 @@ GameObject:
   - component: {fileID: 2066921809}
   - component: {fileID: 2066921812}
   - component: {fileID: 2066921811}
-  - component: {fileID: 2066921810}
   m_Layer: 0
   m_Name: Grip
   m_TagString: Untagged
@@ -3105,27 +2998,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1999493716}
   m_LocalEulerAnglesHint: {x: -54.439, y: 0, z: 0}
---- !u!65 &2066921810
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2066921808}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2066921811
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3194,7 +3066,7 @@ GameObject:
   - component: {fileID: 2104078929}
   - component: {fileID: 2104078932}
   - component: {fileID: 2104078931}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3273,6 +3145,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104078928}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &8636706354778794070
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5625402897645147117, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7697214890902402798, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
+      propertyPath: m_Name
+      value: Bomb
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3286,3 +3215,4 @@ SceneRoots:
   - {fileID: 841889459}
   - {fileID: 860191151}
   - {fileID: 1302416307}
+  - {fileID: 8636706354778794070}
