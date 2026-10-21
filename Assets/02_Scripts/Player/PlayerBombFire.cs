@@ -5,16 +5,26 @@ using UnityEngine;
 /// </summary>
 public class PlayerBombFire : MonoBehaviour
 {
+    [Header("Reference")]
     [SerializeField] private GameObject _grenadePrefab;
     [SerializeField] private Transform _throwPosition;
 
+    [Header("Throw Settings")]
+    [SerializeField] private int _initialBombCount = 10;
+    private int _currentBombCount = 0;
     [SerializeField] private float _throwPower;
+
+    private void Awake()
+    {
+        _currentBombCount = _initialBombCount;
+    }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire2") && _currentBombCount > 0)
         {
             ThrowProjectile(_grenadePrefab);
+            _currentBombCount--;
         }
     }
 
