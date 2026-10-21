@@ -2343,7 +2343,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBombFire
   _grenadePrefab: {fileID: 7697214890902402798, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
   _throwPosition: {fileID: 556105408}
-  _throwPower: 5
+  _initialBombCount: 10
+  _maxThrowPower: 10
+  _minThrowPower: 2
+  _throwPowerIncreaseRatio: 5
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0

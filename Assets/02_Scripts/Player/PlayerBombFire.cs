@@ -11,8 +11,13 @@ public class PlayerBombFire : MonoBehaviour
 
     [Header("Throw Settings")]
     [SerializeField] private int _initialBombCount = 10;
+    [SerializeField] private float _maxThrowPower = 10f;
+    [SerializeField] private float _minThrowPower = 2f;
+    [SerializeField] private float _throwPowerIncreaseRatio = 5f;
+    private float _currentThrowPower = 0f;
     private int _currentBombCount = 0;
-    [SerializeField] private float _throwPower;
+
+    private bool _isBombFused = false;
 
     private void Awake()
     {
@@ -23,11 +28,28 @@ public class PlayerBombFire : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire2") && _currentBombCount > 0)
         {
-            ThrowProjectile(_grenadePrefab);
-            _currentBombCount--;
+            _isBombFused = true;
+            _currentThrowPower = _minThrowPower;
         }
+
+        if (_isBombFused)
+        {
+            _currentThrowPower = Mathf.Min(_currentThrowPower + _throwPowerIncreaseRatio * Time.deltaTime, _maxThrowPower);
+        }
+
+        if (Input.GetButtonUp("Fire2") && _isBombFused)
+        {
+            ThrowBomb();
+            _isBombFused = false;
+        }
+
     }
 
+    private void ThrowBomb()
+    {
+        ThrowProjectile(_grenadePrefab);
+        _currentBombCount--;
+    }
     private void ThrowProjectile(GameObject projectilePrefab)
     {
         if (projectilePrefab == null)
@@ -40,7 +62,7 @@ public class PlayerBombFire : MonoBehaviour
 
         if (generated.TryGetComponent(out BombProjectile proj))
         {
-            proj.Throw(Camera.main.transform.forward * _throwPower);
+            proj.Throw(Camera.main.transform.forward * _currentThrowPower);
         }
 
     }
