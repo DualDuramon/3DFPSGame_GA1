@@ -43,6 +43,7 @@ public class PlayerGunFire : MonoBehaviour
 
             if (_isReloading)
             {
+                //StopAllCoroutine() //이 방식은 이 모노비헤이비어의 모든 코루틴을 종료
                 StopCoroutine(_reloadCoroutine);
                 _reloadCoroutine = null;
             }
@@ -73,6 +74,11 @@ public class PlayerGunFire : MonoBehaviour
             if (_hitEffectPrefab != null)
             {
                 LeanPool.Spawn(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            }
+
+            if (hitInfo.collider.TryGetComponent(out Zombie zombie))
+            {
+                zombie.TakeDamage(_damage);
             }
         }
     }
