@@ -14,6 +14,7 @@ public enum ZombieState
     Attack,     // 일정시간마다 :플레이어를 때린다
     Hit,        //피격 : 공격(총알, 폭탄)을 받아 잠시 멈칫한다
     Death,      // 죽음 : 쓰러지고 잠시 뒤 사라진다
+    Roaming,    // 순찰 : 현재 지점 주변의 원형 경로를 돈다
 }
 
 public class Zombie : MonoBehaviour
@@ -28,6 +29,14 @@ public class Zombie : MonoBehaviour
     [SerializeField] private float _detectDistance = 5f;
     [SerializeField] private Vector3 _startPosition;
     [SerializeField] private float _combackDistance = 10f;
+
+    [Header("Roaming Status")]
+    [SerializeField] private float _roamingRadius = 3f;
+    private const float IdleDuration = 3f;
+    private const float RoamingAngleStep = 5f;
+    private float _idleTimer;
+    private float _roamingAngle;
+    private Vector3 _roamingCenter;
 
     [Header("Attack Status")]
     [SerializeField] private float _attackDistance = 10f;
@@ -54,6 +63,7 @@ public class Zombie : MonoBehaviour
     private void Start()
     {
         _player = GameObject.FindAnyObjectByType<PlayerMove>().gameObject;
+        _startPosition = transform.position;
     }
 
     private void Update()
@@ -62,6 +72,9 @@ public class Zombie : MonoBehaviour
         {
             case ZombieState.Idle:
                 Idle();
+                break;
+            case ZombieState.Roaming:
+                Roaming();
                 break;
             case ZombieState.Trace:
                 Trace();
@@ -83,17 +96,59 @@ public class Zombie : MonoBehaviour
 
     private void Idle()
     {
-        //대기 : 제자리에서 플레이어를 기다림
-        //그러다 가까워지면 Trace로 전이
+        if (TryDetectPlayer()) return;
 
-        float distance = Vector3.Distance(transform.position, _player.transform.position);
-        if (distance <= _detectDistance)
+        _idleTimer += Time.deltaTime;
+        if (_idleTimer >= IdleDuration)
         {
-            GameLogger.Log($"{_state} => Trance");
-            _startPosition = transform.position;
-            _state = ZombieState.Trace;
+            _idleTimer = 0f;
+            _roamingCenter = transform.position;
+            _startPosition = _roamingCenter;
+            _roamingAngle = 0f;
+            _state = ZombieState.Roaming;
         }
     }
+
+    private bool TryDetectPlayer()
+    {
+        if (Vector3.Distance(transform.position, _player.transform.position) > _detectDistance)
+        {
+            return false;
+        }
+
+        GameLogger.Log($"{_state} => Trace");
+        if (_state == ZombieState.Idle) _startPosition = transform.position;
+        _idleTimer = 0f;
+        _state = ZombieState.Trace;
+        return true;
+    }
+
+    private void Roaming()
+    {
+        if (TryDetectPlayer()) return;
+        if (_roamingRadius <= 0f) return;
+
+        // +Z에서 +X 방향으로 진행하므로 위에서 보면 시계 방향이다.
+        float radians = _roamingAngle * Mathf.Deg2Rad;
+        Vector3 target = _roamingCenter + new Vector3(Mathf.Sin(radians), 0f, Mathf.Cos(radians)) * _roamingRadius;
+        Vector3 direction = target - transform.position;
+
+        direction.y = 0f;
+        float distance = direction.magnitude;
+
+        if (distance <= 0.01f)
+        {
+            _roamingAngle = Mathf.Repeat(_roamingAngle + RoamingAngleStep, 360f);
+            return;
+        }
+
+        if (Time.deltaTime <= 0f) return;
+
+        transform.forward = direction.normalized;
+        float speed = Mathf.Min(Mathf.Max(0f, _moveSpeed), distance / Time.deltaTime);
+        _controller.SimpleMove(direction.normalized * speed);
+    }
+
     private void Trace()
     {
         float distanceToPlayer = Mathf.Abs(Vector3.Distance(transform.position, _player.transform.position));
@@ -121,17 +176,21 @@ public class Zombie : MonoBehaviour
     }
     private void Comback()
     {
-        if (Vector3.Distance(transform.position, _startPosition) < 0.1f)
+        Vector3 direction = _startPosition - transform.position;
+        direction.y = 0f;
+        float distance = direction.magnitude;
+
+        if (distance < 0.01f)
         {
+            _idleTimer = 0f;
             _state = ZombieState.Idle;
             return;
         }
 
-        Vector3 direction = _startPosition - transform.position;
-        direction.y = 0;
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction.normalized * _moveSpeed);
+        if (Time.deltaTime <= 0f) return;
+        transform.forward = direction.normalized;
+        float speed = Mathf.Min(Mathf.Max(0f, _moveSpeed), distance / Time.deltaTime);
+        _controller.SimpleMove(direction.normalized * speed);
     }
 
     private void Attack()
@@ -158,9 +217,14 @@ public class Zombie : MonoBehaviour
 
         _health -= damage;
 
-        if (_health < 0f)
+        if (_health <= 0f)
         {
             _state = ZombieState.Death;
+            if (_shockCoroutine != null)
+            {
+                StopCoroutine(_shockCoroutine);
+                _shockCoroutine = null;
+            }
             if (_deathCoroutine != null) StopCoroutine(_deathCoroutine);
             _deathCoroutine = StartCoroutine(DeathCoroutine());
             return;
@@ -179,21 +243,24 @@ public class Zombie : MonoBehaviour
 
         yield return new WaitForSeconds(0.2f);
 
-        _state = ZombieState.Trace;
+        if (_state != ZombieState.Death) _state = ZombieState.Trace;
         _shockCoroutine = null;
     }
 
     private IEnumerator DeathCoroutine()
     {
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = startRotation * Quaternion.Euler(0f, 0f, 90f);
         float elapsed = 0f;
         while (elapsed < 1f)
         {
             elapsed += Time.deltaTime;
-            transform.Rotate(0f, 0f, 15f);
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, Mathf.Clamp01(elapsed));
 
             yield return null;
         }
 
+        transform.rotation = targetRotation;
         yield return new WaitForSecondsRealtime(1f);
 
         StopAllCoroutines();
