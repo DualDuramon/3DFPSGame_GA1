@@ -31,6 +31,8 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GameState != GameState.Playing) return;
+
         //1. 마우스 오른쪽 버튼 입력 받기
         if (Input.GetButton("Fire1")
             && Time.time - _currentFireTime > _status.FireInterval

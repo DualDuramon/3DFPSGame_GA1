@@ -51,29 +51,31 @@ public class UI_PlayerTakeDamageEffect : MonoBehaviour
 
     private IEnumerator DamageVignetteCoroutine()
     {
-        float elapsed = 0f;
-        while (elapsed < _vignetteTime)
-        {
-            elapsed += Time.deltaTime;
-            float alpha = _startColor.a * _vignettedCurve.Evaluate(elapsed / _vignetteTime);
-            Color newColor = _vignetteImage.color;
-            newColor.a = alpha;
+        float elapsedTime = 0f;
+        _vignetteImage.color = _startColor;
 
-            _vignetteImage.color = newColor;
+        while (elapsedTime < _vignetteTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float alpha = _startColor.a * _vignettedCurve.Evaluate(elapsedTime / _vignetteTime);
+            SetAlpha(alpha);
 
             yield return null;
         }
-
-        _vignetteImage.color = _startColor;
+        SetColorTransparency();
     }
 
     private void SetColorTransparency()
     {
-        Color tempColor = _vignetteImage.color;
-        tempColor.a = 0f;
-
-        _vignetteImage.color = tempColor;
+        SetAlpha(0f);
     }
 
+    private void SetAlpha(float newAlpha)
+    {
+        Color newColor = _vignetteImage.color;
+        newColor.a = newAlpha;
 
+        _vignetteImage.color = newColor;
+    }
 }

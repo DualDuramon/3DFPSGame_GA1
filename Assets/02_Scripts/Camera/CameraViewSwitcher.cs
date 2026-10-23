@@ -99,6 +99,8 @@ namespace CameraView
 
         private void Update()
         {
+            if (GameManager.Instance.GameState != GameState.Playing) return;
+
             if (Input.GetKeyDown(KeyCode.V))
             {
                 SwitchView((_currentViewIndex + 1) % _strategies.Length);

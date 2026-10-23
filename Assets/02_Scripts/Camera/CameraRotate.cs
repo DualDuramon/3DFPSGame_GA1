@@ -12,6 +12,8 @@ public class CameraRotate : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GameState != GameState.Playing) return;
+
         //1. 마우스 입력 받는다
         float mouseInputX = Input.GetAxis("Mouse X");
         float mouseInputY = Input.GetAxis("Mouse Y");

@@ -21,6 +21,7 @@ public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("Reference")]
     [SerializeField] private CharacterController _controller;
+    [SerializeField] private ZombieAnimationModule _animModule;
     [SerializeField] private GameObject _bloodEffectPrefab;
     private GameObject _player;
 
@@ -65,6 +66,10 @@ public class Zombie : MonoBehaviour, IDamageable
         {
             _controller = GetComponent<CharacterController>();
         }
+        if (_animModule == null)
+        {
+            _animModule = GetComponentInChildren<ZombieAnimationModule>();
+        }
 
         _health = _maxHealth;
     }
@@ -77,6 +82,8 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if (GameManager.Instance.GameState != GameState.Playing) return;
+
         switch (_state)
         {
             case ZombieState.Idle:
@@ -212,7 +219,8 @@ public class Zombie : MonoBehaviour, IDamageable
         _attackTimer += Time.deltaTime;
         if (_attackTimer > _attackInterval)
         {
-            HandleAttackPlayer();
+
+            _animModule.PlayAttackAnimation();
             _attackTimer = 0f;
         }
     }
@@ -260,25 +268,17 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private IEnumerator DeathCoroutine()
     {
-        Quaternion startRotation = transform.rotation;
-        Quaternion targetRotation = startRotation * Quaternion.Euler(0f, 0f, 90f);
-        float elapsed = 0f;
-        while (elapsed < 1f)
-        {
-            elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, Mathf.Clamp01(elapsed));
 
-            yield return null;
-        }
+        _animModule.PlayDeathAnimation();
 
-        transform.rotation = targetRotation;
         yield return new WaitForSecondsRealtime(1f);
 
         StopAllCoroutines();
         Destroy(gameObject);
 
     }
-    private void HandleAttackPlayer()
+
+    public void HandleAttackPlayer()
     {
         if (Physics.Raycast(_attackPosition.position, _attackPosition.forward, out RaycastHit hitInfo, _attackDistance * 1.5f, _attackableLayer))
         {
