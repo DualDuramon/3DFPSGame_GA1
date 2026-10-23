@@ -76,6 +76,7 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     private void HandleDeath()
     {
         GameLogger.Log($"{name} : Player is Dead!");
+        GameManager.Instance.GameOver();
     }
 
 }
