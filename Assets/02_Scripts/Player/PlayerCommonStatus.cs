@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerCommonStatus : MonoBehaviour, IDamageable
@@ -40,6 +41,8 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     public float FireInterval => _fireInterval;
     public float Range => _range;
 
+    public event Action OnTakeHit;
+
     private void Awake()
     {
         _currentHealth = Mathf.Max(0f, _maxHealth);
@@ -63,7 +66,7 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     public void TakeDamage(DamageInfo damageInfo)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - Mathf.Max(0f, damageInfo.DamageValue), 0f, Mathf.Max(0f, _maxHealth));
-
+        OnTakeHit?.Invoke();
         if (_currentHealth <= 0f)
         {
             HandleDeath();
