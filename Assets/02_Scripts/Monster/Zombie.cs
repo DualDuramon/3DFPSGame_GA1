@@ -21,7 +21,7 @@ public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("Reference")]
     [SerializeField] private CharacterController _controller;
-    [SerializeField] private Material _skinMaterial;
+    [SerializeField] private GameObject _bloodEffectPrefab;
     private GameObject _player;
 
     [Header("Move Status")]
@@ -45,6 +45,7 @@ public class Zombie : MonoBehaviour, IDamageable
 
     [Header("Damage Status")]
     [SerializeField] private float _health = 30f;
+    [SerializeField] private float _maxHealth = 30f;
     [SerializeField] private float _shockTime = 0f;
     private Coroutine _shockCoroutine;
     private Coroutine _deathCoroutine;
@@ -52,12 +53,17 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private ZombieState _state = ZombieState.Idle;
 
+
+    public float CurrentHealthRatio => _health / _maxHealth;
+
     private void Awake()
     {
         if (_controller == null)
         {
             _controller = GetComponent<CharacterController>();
         }
+
+        _health = _maxHealth;
     }
 
     private void Start()
@@ -209,12 +215,12 @@ public class Zombie : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageInfo info)
     {
         if (_state == ZombieState.Death) return;
         //맞으면 잠깐 멈칫하고 싶다!
 
-        _health -= damage;
+        _health -= info.DamageValue;
 
         if (_health <= 0f)
         {
@@ -235,6 +241,10 @@ public class Zombie : MonoBehaviour, IDamageable
             StopCoroutine(_shockCoroutine);
         }
         _shockCoroutine = StartCoroutine(HitCoroutine());
+
+        Transform effect = Instantiate(_bloodEffectPrefab, gameObject.transform).transform;
+        effect.transform.position = info.HitPoint;
+        effect.forward = info.HitNormal;
     }
 
     private IEnumerator HitCoroutine()

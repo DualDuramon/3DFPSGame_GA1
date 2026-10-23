@@ -5,12 +5,10 @@ using UnityEngine;
 /// <summary>
 /// 마우스 왼쪽 버튼을 누르면 바라보는 방향으로 총알을 발사하고 싶다.
 /// </summary>
+[RequireComponent(typeof(PlayerCommonStatus))]
 public class PlayerGunFire : MonoBehaviour
 {
-    [Header("Firing")]
-    [SerializeField] private float _damage = 10f;
-    [SerializeField] private float _fireInterval = 0.1f;
-    [SerializeField] private float _range = 100f;
+    private PlayerCommonStatus _status;
 
     [Header("Reloading")]
     [SerializeField] private int _maxBulletCount = 30;
@@ -26,6 +24,7 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Awake()
     {
+        _status = GetComponent<PlayerCommonStatus>();
         _currentFireTime = 0f;
         _bulletCount = _maxBulletCount;
     }
@@ -34,7 +33,7 @@ public class PlayerGunFire : MonoBehaviour
     {
         //1. 마우스 오른쪽 버튼 입력 받기
         if (Input.GetButton("Fire1")
-            && Time.time - _currentFireTime > _fireInterval
+            && Time.time - _currentFireTime > _status.FireInterval
             && _bulletCount > 0) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
             Shoot();
@@ -66,11 +65,11 @@ public class PlayerGunFire : MonoBehaviour
         RaycastHit hitInfo = new RaycastHit();
 
         //4. 레이를 발사하고, 만일 부딛힌 물체가 있다면 이펙트 표시하기.
-        bool isHit = Physics.Raycast(ray, out hitInfo, _range);
+        bool isHit = Physics.Raycast(ray, out hitInfo, _status.Range);
 
         if (isHit)
         {
-            GameLogger.Log($"{hitInfo.collider.name}이 총알을 맞음. 대미지 : {_damage}");
+            GameLogger.Log($"{hitInfo.collider.name}이 총알을 맞음. 대미지 : {_status.Damage}");
             if (_hitEffectPrefab != null)
             {
                 LeanPool.Spawn(_hitEffectPrefab, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
@@ -78,7 +77,9 @@ public class PlayerGunFire : MonoBehaviour
 
             if (hitInfo.collider.TryGetComponent(out IDamageable damagable))
             {
-                damagable.TakeDamage(_damage);
+                DamageInfo info = new DamageInfo(_status.Damage, hitInfo.point, hitInfo.normal);
+
+                damagable.TakeDamage(info);
             }
         }
     }

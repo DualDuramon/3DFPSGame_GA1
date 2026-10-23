@@ -1,4 +1,5 @@
 using Lean.Pool;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,8 +7,15 @@ using UnityEngine;
 /// </summary>
 public class BombProjectile : MonoBehaviour, IPoolable
 {
+    [Header("References")]
     [SerializeField] private ParticleSystem _explosionEffectPrefab;
     [SerializeField] private Rigidbody _rigid;
+    [Header("Damage Settings")]
+    [SerializeField] private float _explosionDamage = 50f;
+    [SerializeField] private float _explosionRadius;
+    [SerializeField] private LayerMask _damageableLayer;
+
+
     private bool _hasExploded;
 
     private void Awake()
@@ -22,6 +30,9 @@ public class BombProjectile : MonoBehaviour, IPoolable
     {
         if (_hasExploded) return;
         _hasExploded = true;
+
+
+        SpreadExplosionDamage();
 
         if (_explosionEffectPrefab != null)
         {
@@ -54,5 +65,31 @@ public class BombProjectile : MonoBehaviour, IPoolable
         if (throwVector == Vector3.zero) return;
 
         _rigid.AddForce(throwVector, ForceMode.Impulse);
+    }
+
+    private void SpreadExplosionDamage()
+    {
+        Vector3 explosionPosition = transform.position;
+
+        Collider[] hits = Physics.OverlapSphere(explosionPosition, _explosionRadius, _damageableLayer, QueryTriggerInteraction.Ignore);
+        HashSet<IDamageable> damagedTargets = new HashSet<IDamageable>();
+
+        foreach (Collider hit in hits)
+        {
+            if (hit == null) continue;
+
+            IDamageable target = hit.GetComponentInParent<IDamageable>();
+            if (target == null || ReferenceEquals(target, this) || !damagedTargets.Add(target)) continue;
+
+            Vector3 hitPoint = hit.ClosestPoint(explosionPosition);
+            Vector3 hitNormal = explosionPosition - hitPoint;
+            if (hitNormal.sqrMagnitude < 0.0001f)
+            {
+                hitNormal = explosionPosition - hit.bounds.center;
+            }
+            hitNormal = hitNormal.sqrMagnitude > 0.0001f ? hitNormal.normalized : Vector3.up;
+
+            target.TakeDamage(new DamageInfo(_explosionDamage, hitPoint, hitNormal));
+        }
     }
 }

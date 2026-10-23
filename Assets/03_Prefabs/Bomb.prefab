@@ -155,3 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombProjectile
   _explosionEffectPrefab: {fileID: 19800006, guid: 8a4aceaf2957c044480166b429f4c7d0, type: 3}
   _rigid: {fileID: 5952111542253072892}
+  _explosionDamage: 50
+  _explosionRadius: 3
+  _damageableLayer:
+    serializedVersion: 2
+    m_Bits: 65
