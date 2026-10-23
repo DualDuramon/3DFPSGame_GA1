@@ -39,9 +39,12 @@ public class Zombie : MonoBehaviour, IDamageable
     private Vector3 _roamingCenter;
 
     [Header("Attack Status")]
+    [SerializeField] private float _attackDamage = 30f;
     [SerializeField] private float _attackDistance = 10f;
     [SerializeField] private float _attackTimer = 0f;
     [SerializeField] private float _attackInterval = 1f;
+    [SerializeField] private LayerMask _attackableLayer;
+    [SerializeField] private Transform _attackPosition;
 
     [Header("Damage Status")]
     [SerializeField] private float _health = 30f;
@@ -209,8 +212,7 @@ public class Zombie : MonoBehaviour, IDamageable
         _attackTimer += Time.deltaTime;
         if (_attackTimer > _attackInterval)
         {
-            //TODO : 공격 애니메이션 실행
-            GameLogger.Log($"공격! 플레이어 ! 공격!");
+            HandleAttackPlayer();
             _attackTimer = 0f;
         }
     }
@@ -275,5 +277,16 @@ public class Zombie : MonoBehaviour, IDamageable
         StopAllCoroutines();
         Destroy(gameObject);
 
+    }
+    private void HandleAttackPlayer()
+    {
+        if (Physics.Raycast(_attackPosition.position, _attackPosition.forward, out RaycastHit hitInfo, _attackDistance * 1.5f, _attackableLayer))
+        {
+            if (hitInfo.collider.TryGetComponent(out IDamageable target))
+            {
+                DamageInfo damageInfo = new DamageInfo(_attackDamage, hitInfo.point, hitInfo.normal);
+                target.TakeDamage(damageInfo);
+            }
+        }
     }
 }

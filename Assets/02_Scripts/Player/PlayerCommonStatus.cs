@@ -1,7 +1,5 @@
 using UnityEngine;
 
-[DisallowMultipleComponent]
-[DefaultExecutionOrder(-100)]
 public class PlayerCommonStatus : MonoBehaviour, IDamageable
 {
     [Header("Status-Health")]
@@ -65,6 +63,16 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     public void TakeDamage(DamageInfo damageInfo)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - Mathf.Max(0f, damageInfo.DamageValue), 0f, Mathf.Max(0f, _maxHealth));
+
+        if (_currentHealth <= 0f)
+        {
+            HandleDeath();
+        }
+    }
+
+    private void HandleDeath()
+    {
+        GameLogger.Log($"{name} : Player is Dead!");
     }
 
 }
