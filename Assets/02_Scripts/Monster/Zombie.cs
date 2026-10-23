@@ -17,7 +17,7 @@ public enum ZombieState
     Roaming,    // 순찰 : 현재 지점 주변의 원형 경로를 돈다
 }
 
-public class Zombie : MonoBehaviour
+public class Zombie : MonoBehaviour, IDamageable
 {
     [Header("Reference")]
     [SerializeField] private CharacterController _controller;
@@ -128,7 +128,6 @@ public class Zombie : MonoBehaviour
         if (TryDetectPlayer()) return;
         if (_roamingRadius <= 0f) return;
 
-        // +Z에서 +X 방향으로 진행하므로 위에서 보면 시계 방향이다.
         float radians = _roamingAngle * Mathf.Deg2Rad;
         Vector3 target = _roamingCenter + new Vector3(Mathf.Sin(radians), 0f, Mathf.Cos(radians)) * _roamingRadius;
         Vector3 direction = target - transform.position;
