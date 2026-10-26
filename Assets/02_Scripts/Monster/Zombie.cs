@@ -4,20 +4,9 @@ using System.Collections;
 using UnityEngine;
 
 //FSM(유한상태머신) : 유한개의 상태가 있고, 상태마다 행동을 다르게 함으로써 AI를 구현하는 유명한 방법
-// - State : 객체가 가질 수 잇는 어떤 조건이나 상황
-// - transition : 조건에 따라 현재 상태에서 다음 상태로 넘어가는 것
+// - State : 객체가 가질 수 잇는 어떤 조건이나 상황 (ZombieStates.cs의 상태 클래스)
+// - transition : 조건에 따라 현재 상태에서 다음 상태로 넘어가는 것 (ChangeState)
 // - Machine : 위 방식에 따라 규칙을 세워둔 것
-
-public enum ZombieState
-{
-    Idle,       //대기 : 제자리에서 플레이어를 기다림
-    Trace,      // 추격 : 플레이어를 쫒아간다
-    Comback,    //복귀 : 처음 자리로 돌아간다.
-    Attack,     // 일정시간마다 :플레이어를 때린다
-    Hit,        //피격 : 공격(총알, 폭탄)을 받아 잠시 멈칫한다
-    Death,      // 죽음 : 쓰러지고 잠시 뒤 사라진다
-    Roaming,    // 순찰 : 현재 지점 주변의 원형 경로를 돈다
-}
 
 public class Zombie : MonoBehaviour, IDamageable, IPoolable
 {
@@ -60,10 +49,24 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     public event Action OnTakeHit;
 
 
-    private ZombieState _state = ZombieState.Idle;
+    private ZombieStateBase _currentState = ZombieStates.Idle;
 
 
     public float CurrentHealthRatio => _health / _maxHealth;
+    public bool IsPlayerDetected => DistanceToPlayer <= _detectDistance;
+    public float DistanceToPlayer => Vector3.Distance(transform.position, _player.transform.position);
+    public float CombackDistance => _combackDistance;
+    public float AttackDistance => _attackDistance;
+    public float RoamingRadius => _roamingRadius;
+    public Vector3 StartPosition => _startPosition;
+    public Vector3 RoamingTarget
+    {
+        get
+        {
+            float radians = _roamingAngle * Mathf.Deg2Rad;
+            return _roamingCenter + new Vector3(Mathf.Sin(radians), 0f, Mathf.Cos(radians)) * _roamingRadius;
+        }
+    }
 
     private void Awake()
     {
@@ -92,102 +95,63 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     {
         if (GameManager.Instance.GameState != GameState.Playing) return;
 
-        switch (_state)
-        {
-            case ZombieState.Idle:
-                Idle();
-                break;
-            case ZombieState.Roaming:
-                Roaming();
-                break;
-            case ZombieState.Trace:
-                Trace();
-                break;
-            case ZombieState.Attack:
-                Attack();
-                break;
-            case ZombieState.Comback:
-                Comback();
-                break;
-            case ZombieState.Hit:
-                break;
-            case ZombieState.Death:
-                break;
-            default:
-                break;
-        }
+        _currentState.Tick(this);
     }
 
-    private void Idle()
+    public void ChangeState(ZombieStateBase next)
     {
-        if (TryDetectPlayer()) return;
-
-        _idleTimer += Time.deltaTime;
-        if (_idleTimer >= IdleDuration)
-        {
-            _idleTimer = 0f;
-            _roamingCenter = transform.position;
-            _startPosition = _roamingCenter;
-            _roamingAngle = 0f;
-            _state = ZombieState.Roaming;
-        }
+        GameLogger.Log($"{_currentState.Name} => {next.Name}");
+        _currentState = next;
+        _currentState.Enter(this);
     }
 
-    private bool TryDetectPlayer()
+    public void ResetIdleTimer()
     {
-        if (Vector3.Distance(transform.position, _player.transform.position) > _detectDistance)
-        {
-            return false;
-        }
-
-        GameLogger.Log($"{_state} => Trace");
-        if (_state == ZombieState.Idle) _startPosition = transform.position;
         _idleTimer = 0f;
-        _state = ZombieState.Trace;
-        return true;
     }
 
-    private void Roaming()
+    // 대기 시간이 다 지났으면 true
+    public bool TickIdleTimer()
     {
-        if (TryDetectPlayer()) return;
-        if (_roamingRadius <= 0f) return;
+        _idleTimer += Time.deltaTime;
+        return _idleTimer >= IdleDuration;
+    }
 
-        float radians = _roamingAngle * Mathf.Deg2Rad;
-        Vector3 target = _roamingCenter + new Vector3(Mathf.Sin(radians), 0f, Mathf.Cos(radians)) * _roamingRadius;
+    public void SetStartPositionHere()
+    {
+        _startPosition = transform.position;
+    }
+
+    public void BeginRoaming()
+    {
+        _roamingCenter = transform.position;
+        _startPosition = _roamingCenter;
+        _roamingAngle = 0f;
+    }
+
+    public void AdvanceRoamingAngle()
+    {
+        _roamingAngle = Mathf.Repeat(_roamingAngle + RoamingAngleStep, 360f);
+    }
+
+    // target 쪽으로 이동한다. 이미 도착했으면 true
+    public bool MoveTowards(Vector3 target)
+    {
         Vector3 direction = target - transform.position;
-
         direction.y = 0f;
         float distance = direction.magnitude;
 
-        if (distance <= 0.01f)
-        {
-            _roamingAngle = Mathf.Repeat(_roamingAngle + RoamingAngleStep, 360f);
-            return;
-        }
-
-        if (Time.deltaTime <= 0f) return;
+        if (distance <= 0.01f) return true;
+        if (Time.deltaTime <= 0f) return false;
 
         transform.forward = direction.normalized;
         float speed = Mathf.Min(Mathf.Max(0f, _moveSpeed), distance / Time.deltaTime);
         _controller.SimpleMove(direction.normalized * speed);
+        return false;
     }
 
-    private void Trace()
+    public void MoveToPlayer()
     {
-        float distanceToPlayer = Mathf.Abs(Vector3.Distance(transform.position, _player.transform.position));
-        //플레이어를 쫒아간다
-        if (distanceToPlayer > _combackDistance)
-        {
-            _state = ZombieState.Comback;
-            return;
-        }
-
-        if (distanceToPlayer < _attackDistance)
-        {
-            _state = ZombieState.Attack;
-            return;
-        }
-
         Vector3 direction = _player.transform.position - transform.position;
 
         direction.y = 0;
@@ -195,55 +159,32 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         transform.forward = direction;
         _controller.SimpleMove(direction * _moveSpeed);
-
-    }
-    private void Comback()
-    {
-        Vector3 direction = _startPosition - transform.position;
-        direction.y = 0f;
-        float distance = direction.magnitude;
-
-        if (distance < 0.01f)
-        {
-            _idleTimer = 0f;
-            _state = ZombieState.Idle;
-            return;
-        }
-
-        if (Time.deltaTime <= 0f) return;
-        transform.forward = direction.normalized;
-        float speed = Mathf.Min(Mathf.Max(0f, _moveSpeed), distance / Time.deltaTime);
-        _controller.SimpleMove(direction.normalized * speed);
     }
 
-    private void Attack()
+    public void TickAttackTimer()
     {
-        if (Vector3.Distance(transform.position, _player.transform.position) > _attackDistance)
-        {
-            _state = ZombieState.Trace;
-            return;
-        }
-
         _attackTimer += Time.deltaTime;
         if (_attackTimer > _attackInterval)
         {
-
             _animModule.PlayAttackAnimation();
             _attackTimer = 0f;
         }
     }
 
-    public void TakeDamage(DamageInfo info)
+    public void TakeDamage(DamageInfo damageInfo)
     {
-        if (_state == ZombieState.Death) return;
-        //맞으면 잠깐 멈칫하고 싶다!
+        _currentState.OnDamaged(this, damageInfo);
+    }
 
-        _health -= info.DamageValue;
+    // 상태가 데미지를 받아들이기로 했을 때 호출된다 (ZombieStateBase.OnDamaged)
+    public void ApplyDamage(DamageInfo damageInfo)
+    {
+        _health -= damageInfo.DamageValue;
         OnTakeHit?.Invoke();
 
         if (_health <= 0f)
         {
-            _state = ZombieState.Death;
+            ChangeState(ZombieStates.Death);
             if (_shockCoroutine != null)
             {
                 StopCoroutine(_shockCoroutine);
@@ -254,7 +195,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
             return;
         }
 
-        _state = ZombieState.Hit;
+        ChangeState(ZombieStates.Hit);
         if (_shockCoroutine != null)
         {
             StopCoroutine(_shockCoroutine);
@@ -262,8 +203,8 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         _shockCoroutine = StartCoroutine(HitCoroutine());
 
         Transform effect = Instantiate(_bloodEffectPrefab, gameObject.transform).transform;
-        effect.transform.position = info.HitPoint;
-        effect.forward = info.HitNormal;
+        effect.transform.position = damageInfo.HitPoint;
+        effect.forward = damageInfo.HitNormal;
     }
 
     private IEnumerator HitCoroutine()
@@ -271,7 +212,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         yield return new WaitForSeconds(0.2f);
 
-        if (_state != ZombieState.Death) _state = ZombieState.Trace;
+        _currentState.OnShockEnd(this);
         _shockCoroutine = null;
     }
 
@@ -304,8 +245,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         // 풀에서 재사용될 때 이전 생애의 상태를 초기화한다
         _health = _maxHealth;
-        _state = ZombieState.Idle;
-        _idleTimer = 0f;
+        ChangeState(ZombieStates.Idle);
         _attackTimer = 0f;
         _shockCoroutine = null;
         _deathCoroutine = null;
