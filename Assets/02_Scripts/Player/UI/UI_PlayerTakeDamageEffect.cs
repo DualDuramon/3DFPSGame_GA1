@@ -9,8 +9,7 @@ public class UI_PlayerTakeDamageEffect : MonoBehaviour
     [SerializeField] private Image _vignetteImage;
     [SerializeField] AnimationCurve _vignettedCurve;
     [SerializeField] private float _vignetteTime = 1f;
-
-    private Color _startColor;
+    [SerializeField] private Color _startColor;
     private Coroutine _vignetteCoroutine;
 
     private void Awake()
@@ -24,7 +23,6 @@ public class UI_PlayerTakeDamageEffect : MonoBehaviour
         {
             _vignetteImage = GetComponentInChildren<Image>();
         }
-        _startColor = _vignetteImage.color;
         SetColorTransparency();
     }
 
