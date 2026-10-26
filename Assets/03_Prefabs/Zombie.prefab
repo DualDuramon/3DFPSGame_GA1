@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3600361983440704065}
   - component: {fileID: 6500202681155805147}
   - component: {fileID: 3124085896968039266}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LeftWing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 301014024678042009}
   - component: {fileID: 132833230070018123}
   - component: {fileID: 1992742052721136154}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6509003974320238498}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: AttackPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 2793256414230926149}
   - component: {fileID: 928175643774370805}
   - component: {fileID: 3112109338864179756}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hair (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 6933733255743736335}
   - component: {fileID: 3533358855166518951}
   - component: {fileID: 3365899328711216944}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: UnderHair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 1919329330826248564}
   - component: {fileID: 1932969739630218477}
   - component: {fileID: 2922044210385740670}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -476,7 +476,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7715044318216110519}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 1158653500486185620}
   - component: {fileID: 5702705693361171901}
   - component: {fileID: 1525746055644209303}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LeftWing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +607,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7093585844620442847}
   - component: {fileID: 6348795478999939227}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 9198597861633042693}
   - component: {fileID: 8992515889032719238}
   - component: {fileID: 4818394227626966874}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -773,7 +773,7 @@ GameObject:
   - component: {fileID: 1147361340050947386}
   - component: {fileID: 2969141495615908381}
   - component: {fileID: 5295997310554964476}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: MeshPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,7 +845,7 @@ GameObject:
   - component: {fileID: 2795221998706916243}
   - component: {fileID: 86013077719308551}
   - component: {fileID: 7556300294568403673}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HealthBarCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -890,7 +890,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -960,7 +960,7 @@ GameObject:
   - component: {fileID: 5458564077201886163}
   - component: {fileID: 169985515909353132}
   - component: {fileID: 6488309717547294414}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: UnderHair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1048,7 +1048,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4259684481734434273}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5133652110626513519}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1211,7 +1211,7 @@ GameObject:
   - component: {fileID: 1172951676277480548}
   - component: {fileID: 8448762055251593520}
   - component: {fileID: 5671871442587727944}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1301,7 +1301,7 @@ GameObject:
   - component: {fileID: 8740607343706776054}
   - component: {fileID: 5911735017861334558}
   - component: {fileID: 5696746062863319002}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1389,7 +1389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4303509944614100086}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LeftWing_pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1424,7 +1424,7 @@ GameObject:
   - component: {fileID: 199201565356104237}
   - component: {fileID: 7026553096523161177}
   - component: {fileID: 4491754846703918889}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LeftEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1535,7 +1535,7 @@ GameObject:
   - component: {fileID: 6734962290812639798}
   - component: {fileID: 2017262126272212942}
   - component: {fileID: 2447980101930442381}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1628,7 +1628,7 @@ GameObject:
   - component: {fileID: 2911329114642733056}
   - component: {fileID: 5840913297200192900}
   - component: {fileID: 1404489399832522141}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RightEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1737,7 +1737,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3332254066036089204}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1773,7 +1773,7 @@ GameObject:
   - component: {fileID: 9193649073850167163}
   - component: {fileID: 4832234248474261629}
   - component: {fileID: 1705389283021696253}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Hair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1861,7 +1861,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4466360896599383664}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RightWing_pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

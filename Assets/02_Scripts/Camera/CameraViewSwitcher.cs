@@ -32,7 +32,6 @@ namespace CameraView
         [SerializeField] private float _topDownSize = 7f;
 
         private Camera _camera;
-        private Renderer[] _playerRenderers;
         private bool[] _originalRendererStates;
         private ICameraViewStrategy[] _strategies;
         private int _currentViewIndex;
@@ -61,14 +60,6 @@ namespace CameraView
                 enabled = false;
                 return;
             }
-
-            _playerRenderers = _player.GetComponentsInChildren<Renderer>(true);
-            _originalRendererStates = new bool[_playerRenderers.Length];
-            for (int i = 0; i < _playerRenderers.Length; i++)
-            {
-                _originalRendererStates[i] = _playerRenderers[i].enabled;
-            }
-
             // V키 순서대로 전략을 한 번만 생성합니다.
             _strategies = new ICameraViewStrategy[]
             {
@@ -86,14 +77,6 @@ namespace CameraView
             if (_strategies != null)
             {
                 SwitchView(_currentViewIndex);
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (_playerRenderers != null)
-            {
-                SetPlayerVisible(true);
             }
         }
 
@@ -125,24 +108,11 @@ namespace CameraView
         private void SwitchView(int index)
         {
             _currentViewIndex = index;
-            SetPlayerVisible(index != 0);
             CurrentStrategy.Enter(this);
             CurrentStrategy.UpdateCamera(this);
             GameLogger.Log($"{nameof(CameraViewSwitcher)}: {CurrentStrategy.Name}");
         }
 
-        /// <summary>
-        /// 플레이어의 Renderer를 종료하여 특정 카메라 뷰에서 플레이어의 mesh를 안보이게 함
-        /// </summary>
-        /// <param name="visible"></param>
-        private void SetPlayerVisible(bool visible)
-        {
-            for (int i = 0; i < _playerRenderers.Length; i++)
-            {
-                if (_playerRenderers[i] == null) continue;
-                _playerRenderers[i].enabled = visible && _originalRendererStates[i];
-            }
-        }
 
         /// <summary>
         /// 카메라의 원근감 있게(Perspective옵션) 활성화
