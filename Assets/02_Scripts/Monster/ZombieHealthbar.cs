@@ -12,9 +12,23 @@ public class ZombieHealthbar : MonoBehaviour
         _zombie = GetComponentInParent<Zombie>();
     }
 
+    private void OnEnable()
+    {
+        _zombie.OnTakeHit += UpdateHealthBar;
+    }
+
+    private void OnDisable()
+    {
+        _zombie.OnTakeHit -= UpdateHealthBar;
+    }
+
     private void LateUpdate()
     {
-        _slider.value = _zombie.CurrentHealthRatio;
         _slider.transform.forward = Camera.main.transform.forward;
+    }
+
+    private void UpdateHealthBar()
+    {
+        _slider.value = _zombie.CurrentHealthRatio;
     }
 }

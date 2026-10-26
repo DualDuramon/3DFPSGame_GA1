@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -47,12 +48,15 @@ public class Zombie : MonoBehaviour, IDamageable
     [SerializeField] private LayerMask _attackableLayer;
     [SerializeField] private Transform _attackPosition;
 
+
     [Header("Damage Status")]
     [SerializeField] private float _health = 30f;
     [SerializeField] private float _maxHealth = 30f;
     [SerializeField] private float _shockTime = 0f;
     private Coroutine _shockCoroutine;
     private Coroutine _deathCoroutine;
+
+    public event Action OnTakeHit;
 
 
     private ZombieState _state = ZombieState.Idle;
@@ -231,6 +235,7 @@ public class Zombie : MonoBehaviour, IDamageable
         //맞으면 잠깐 멈칫하고 싶다!
 
         _health -= info.DamageValue;
+        OnTakeHit?.Invoke();
 
         if (_health <= 0f)
         {
