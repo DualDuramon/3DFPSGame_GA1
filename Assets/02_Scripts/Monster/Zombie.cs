@@ -1,3 +1,4 @@
+using Lean.Pool;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -18,7 +19,7 @@ public enum ZombieState
     Roaming,    // 순찰 : 현재 지점 주변의 원형 경로를 돈다
 }
 
-public class Zombie : MonoBehaviour, IDamageable
+public class Zombie : MonoBehaviour, IDamageable, IPoolable
 {
     [Header("Reference")]
     [SerializeField] private CharacterController _controller;
@@ -80,8 +81,11 @@ public class Zombie : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        _player = GameObject.FindAnyObjectByType<PlayerMove>().gameObject;
-        _startPosition = transform.position;
+        if (_player == null)
+        {
+            _player = GameObject.FindAnyObjectByType<PlayerMove>().gameObject;
+            _startPosition = transform.position;
+        }
     }
 
     private void Update()
@@ -275,12 +279,10 @@ public class Zombie : MonoBehaviour, IDamageable
     {
 
         _animModule.PlayDeathAnimation();
+        ZombieSpawner.Instance.DecreaseZombieCount();
 
-        yield return new WaitForSecondsRealtime(1f);
-
-        StopAllCoroutines();
-        Destroy(gameObject);
-
+        yield return new WaitForSecondsRealtime(2f);
+        ZombieSpawner.Instance.DeSpawnZombie(gameObject);
     }
 
     public void HandleAttackPlayer()
@@ -293,5 +295,30 @@ public class Zombie : MonoBehaviour, IDamageable
                 target.TakeDamage(damageInfo);
             }
         }
+    }
+
+    public void OnSpawn()
+    {
+        _player = GameObject.FindAnyObjectByType<PlayerMove>().gameObject;
+        _startPosition = transform.position;
+
+        // 풀에서 재사용될 때 이전 생애의 상태를 초기화한다
+        _health = _maxHealth;
+        _state = ZombieState.Idle;
+        _idleTimer = 0f;
+        _attackTimer = 0f;
+        _shockCoroutine = null;
+        _deathCoroutine = null;
+
+        _animModule.ResetAnimation();
+
+        OnTakeHit?.Invoke();    // 체력바를 가득 찬 상태로 갱신
+    }
+
+    public void OnDespawn()
+    {
+        StopAllCoroutines();
+        _shockCoroutine = null;
+        _deathCoroutine = null;
     }
 }

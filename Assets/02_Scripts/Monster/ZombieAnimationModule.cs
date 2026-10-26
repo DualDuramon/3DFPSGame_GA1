@@ -6,7 +6,7 @@ public class ZombieAnimationModule : MonoBehaviour
     [SerializeField] private Zombie _owner;
 
     private static int _attackTriggerHash = Animator.StringToHash("AttackTrigger");
-    private static int _deathTriggerHash = Animator.StringToHash("DeathTrigger");
+    private static int _deathBoolHash = Animator.StringToHash("IsDead");
 
     private void Awake()
     {
@@ -26,7 +26,16 @@ public class ZombieAnimationModule : MonoBehaviour
     }
     public void PlayDeathAnimation()
     {
-        _anim.SetTrigger(_deathTriggerHash);
+        _anim.SetBool(_deathBoolHash, true);
+    }
+
+    public void ResetAnimation()
+    {
+        _anim.SetBool(_deathBoolHash, false);
+        _anim.ResetTrigger(_attackTriggerHash);
+
+        _anim.Rebind();
+        _anim.Update(0f);
     }
 
     public void OnAttackEvent()
