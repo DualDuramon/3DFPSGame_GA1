@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 19800000}
   - component: {fileID: 19900000}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Stone_Flecks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4793,7 +4793,7 @@ GameObject:
   - component: {fileID: 19900002}
   - component: {fileID: 8259830}
   - component: {fileID: 114700001}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Stone_BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9688,6 +9688,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114700001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c67a4069a6f34add9b114c0b6b5c58de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PooledParticleEffect
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 0
@@ -9699,7 +9711,7 @@ GameObject:
   - component: {fileID: 400004}
   - component: {fileID: 19800004}
   - component: {fileID: 19900004}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Stone_BulletImpact_
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14495,15 +14507,3 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &114700001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67a4069a6f34add9b114c0b6b5c58de, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::PooledParticleEffect

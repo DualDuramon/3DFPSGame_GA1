@@ -24,13 +24,11 @@ public class MinimapCamera : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadPlus))
         {
-            float newSize = _camera.orthographicSize - 1f;
-            _camera.orthographicSize = Mathf.Min(_maxZoomOutSize, newSize);
+            CameraZoomIn();
         }
         else if (Input.GetKeyDown(KeyCode.KeypadMinus))
         {
-            float newSize = _camera.orthographicSize + 1f;
-            _camera.orthographicSize = Mathf.Max(_minZoomOutSize, newSize);
+            CameraZoomOut();
         }
     }
 
@@ -38,5 +36,19 @@ public class MinimapCamera : MonoBehaviour
     {
         transform.position = _followTarget.position + _offset; //대상 머리 위로 옮기기
         transform.eulerAngles = new Vector3(90f, _followTarget.eulerAngles.y, 0f); //대상이 바라보는 방향대로 카메라도 같이 회전
+    }
+
+    public void CameraZoomIn()
+    {
+        float newSize = _camera.orthographicSize - 1f;
+        _camera.orthographicSize = Mathf.Max(_minZoomOutSize, newSize);
+
+    }
+
+    public void CameraZoomOut()
+    {
+        float newSize = _camera.orthographicSize + 1f;
+        _camera.orthographicSize = Mathf.Min(_maxZoomOutSize, newSize);
+
     }
 }
