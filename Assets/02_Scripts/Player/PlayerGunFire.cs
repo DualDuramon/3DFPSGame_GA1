@@ -17,6 +17,10 @@ public class PlayerGunFire : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _hitEffectPrefab;
 
+    [Header("Bullet Trail")]
+    [SerializeField] private Transform _muzzle;
+    [SerializeField] private BulletTrail _bulletTrail;
+
     private bool _isReloading => _reloadCoroutine != null;
     private int _bulletCount = 0;
     private float _currentFireTime = 0f;
@@ -71,6 +75,13 @@ public class PlayerGunFire : MonoBehaviour
 
         //4. 레이를 발사하고, 만일 부딛힌 물체가 있다면 이펙트 표시하기.
         bool isHit = Physics.Raycast(ray, out hitInfo, _status.Range);
+
+        //총구에서 적중 지점(빗나가면 사거리 끝)까지 궤적 재생
+        if (_bulletTrail != null && _muzzle != null)
+        {
+            Vector3 endPoint = isHit ? hitInfo.point : ray.origin + ray.direction * _status.Range;
+            _bulletTrail.Play(_muzzle.position, endPoint);
+        }
 
         if (isHit)
         {
