@@ -33,8 +33,11 @@ public class PlayerGunFire : MonoBehaviour
     {
         if (GameManager.Instance.GameState != GameState.Playing) return;
 
+        bool isMouseVisible = Cursor.visible;
+
         //1. 마우스 오른쪽 버튼 입력 받기
         if (Input.GetButton("Fire1")
+            && !isMouseVisible
             && Time.time - _currentFireTime > _status.FireInterval
             && _bulletCount > 0) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
