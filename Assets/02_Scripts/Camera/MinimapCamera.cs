@@ -2,14 +2,35 @@ using UnityEngine;
 
 public class MinimapCamera : MonoBehaviour
 {
+    [SerializeField] private Camera _camera;
     [SerializeField] private Transform _followTarget;
     [SerializeField] private Vector3 _offset = new Vector3(0, 8f, 0f);
+    [SerializeField] private float _maxZoomOutSize = 12f;
+    [SerializeField] private float _minZoomOutSize = 2f;
 
     private void Awake()
     {
         if (_followTarget == null)
         {
             _followTarget = FindAnyObjectByType<PlayerMove>().transform;
+        }
+        if (_camera == null)
+        {
+            _camera = GetComponent<Camera>();
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            float newSize = _camera.orthographicSize - 1f;
+            _camera.orthographicSize = Mathf.Min(_maxZoomOutSize, newSize);
+        }
+        else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            float newSize = _camera.orthographicSize + 1f;
+            _camera.orthographicSize = Mathf.Max(_minZoomOutSize, newSize);
         }
     }
 
