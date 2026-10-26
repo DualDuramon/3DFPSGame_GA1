@@ -25,8 +25,6 @@ public class PlayerZooming : MonoBehaviour
             _animator.SetBool(_zoomHash, true);
         }
 
-
-
         if (Input.GetButtonUp("Fire2") && _isZooming)
         {
             _animator.SetBool(_zoomHash, false);

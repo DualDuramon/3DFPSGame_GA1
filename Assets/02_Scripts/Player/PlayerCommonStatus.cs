@@ -41,7 +41,7 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     public float FireInterval => _fireInterval;
     public float Range => _range;
 
-    public event Action OnTakeHit;
+    public event Action OnTakeHit; //Action 자료형 : 함수들을 저장할 수 있다.
 
     private void Awake()
     {

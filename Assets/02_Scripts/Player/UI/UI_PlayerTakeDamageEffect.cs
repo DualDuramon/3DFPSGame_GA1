@@ -28,12 +28,18 @@ public class UI_PlayerTakeDamageEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        _targetStatus.OnTakeHit += StartDamageVigenette;
+        if (_targetStatus != null)
+        {
+            _targetStatus.OnTakeHit += StartDamageVigenette;
+        }
     }
 
     private void OnDisable()
     {
-        _targetStatus.OnTakeHit -= StartDamageVigenette;
+        if (_targetStatus != null)
+        {
+            _targetStatus.OnTakeHit -= StartDamageVigenette;
+        }
     }
 
     private void StartDamageVigenette()

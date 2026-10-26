@@ -24,16 +24,24 @@ public class UI_PlayerStats : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    private void OnEnable()
+    {
+        _playerStatus.OnTakeHit += UpdateHealthBar;
+    }
+
+    private void OnDisable()
+    {
+        _playerStatus.OnTakeHit -= UpdateHealthBar;
+    }
+
+    private void Update()
     {
         if (_playerStatus == null) return;
 
-        if (_healthSlider != null)
-        {
-            _healthSlider.minValue = 0f;
-            _healthSlider.maxValue = 1f;
-            _healthSlider.value = _playerStatus.CurrentHealthRatio;
-        }
+        //문제 : Update에서 계속 체력갱신 연산을 해버리는건 불필요한 연산이다.
+        //특히 이런게 많아질수록 CPU가 쉬질 못한다 -> 쓰로틀링이 걸려 렉걸린다
+        //UpdateHealthBar() //폴링 방식
+
         if (_staminaSlider != null)
         {
             _staminaSlider.minValue = 0f;
@@ -41,4 +49,15 @@ public class UI_PlayerStats : MonoBehaviour
             _staminaSlider.value = _playerStatus.CurrentStaminaRatio;
         }
     }
+
+    private void UpdateHealthBar()
+    {
+        if (_healthSlider != null)
+        {
+            _healthSlider.minValue = 0f;
+            _healthSlider.maxValue = 1f;
+            _healthSlider.value = _playerStatus.CurrentHealthRatio;
+        }
+    }
+
 }
