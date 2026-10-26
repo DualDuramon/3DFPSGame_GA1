@@ -15,6 +15,6 @@ public class ZombieHealthbar : MonoBehaviour
     private void LateUpdate()
     {
         _slider.value = _zombie.CurrentHealthRatio;
-        transform.forward = Camera.main.transform.forward;
+        _slider.transform.forward = Camera.main.transform.forward;
     }
 }
