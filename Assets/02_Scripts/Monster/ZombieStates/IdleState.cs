@@ -4,6 +4,7 @@ public class IdleState : ZombieStateBase
 
     public override void Enter(Zombie zombie)
     {
+        zombie.StopAgent();
         zombie.ResetIdleTimer();
     }
 

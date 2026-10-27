@@ -22,7 +22,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     [SerializeField] private float _moveSpeed = 3f;
     [SerializeField] private float _detectDistance = 5f;
     [SerializeField] private Vector3 _startPosition;
-    [SerializeField] private float _combackDistance = 10f;
+    [SerializeField] private float _combackDistance = 0.7f;
 
     [Header("Roaming Status")]
     [SerializeField] private float _roamingRadius = 3f;
@@ -60,6 +60,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     public float CombackDistance => _combackDistance;
     public float AttackDistance => _attackDistance;
     public float RoamingRadius => _roamingRadius;
+    //public bool HasArrived => _agent.pathStatus == NavMeshPathStatus.PathComplete;
     public Vector3 StartPosition => _startPosition;
     public Vector3 RoamingTarget
     {
@@ -205,14 +206,22 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     private IEnumerator HitCoroutine()
     {
 
+        StopAgent();
         yield return new WaitForSeconds(_shockTime);
 
         _currentState.OnShockEnd(this);
         _shockCoroutine = null;
     }
 
+    public void StopAgent()
+    {
+        _agent.ResetPath();
+        _agent.velocity = Vector3.zero;
+    }
+
     private IEnumerator DeathCoroutine()
     {
+        StopAgent();
 
         _animModule.PlayDeathAnimation();
         ZombieSpawner.Instance.DecreaseZombieCount();
