@@ -48,6 +48,12 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     private Coroutine _shockCoroutine;
     private Coroutine _deathCoroutine;
 
+    [Header("Jump Status")]
+    [SerializeField] private float _jumpHeight = 1.5f;      // 시작·끝을 잇는 직선 위로 솟는 기본 높이
+    [SerializeField] private float _jumpSpeed = 5f;         // 수평 이동 속도 (점프 시간 계산용)
+    [SerializeField] private float _minJumpDuration = 0.3f;
+    private Coroutine _jumpCoroutine;
+
     public event Action OnTakeHit;
 
 
@@ -57,6 +63,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     public float CurrentHealthRatio => _health / _maxHealth;
     public bool IsPlayerDetected => DistanceToPlayer <= _detectDistance;
     public float DistanceToPlayer => Vector3.Distance(transform.position, _player.transform.position);
+    public bool IsJumping => _jumpCoroutine != null;
     public float CombackDistance => _combackDistance;
     public float AttackDistance => _attackDistance;
     public float RoamingRadius => _roamingRadius;
@@ -81,6 +88,8 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         {
             _agent = GetComponent<NavMeshAgent>();
         }
+        // 링크를 자동으로 건너면 직선으로 미끄러지므로, 직접 포물선으로 점프시킨다 (JumpCoroutine)
+        _agent.autoTraverseOffMeshLink = false;
 
         _health = _maxHealth;
     }
@@ -98,7 +107,51 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     {
         if (GameManager.Instance.GameState != GameState.Playing) return;
 
+        // 점프 중에는 상태 Tick을 멈춘다
+        if (IsJumping) return;
+        // 경로상의 링크(NavMeshSurface Generated Link) 시작점에 도착하면 점프한다
+        if (_agent.isOnOffMeshLink)
+        {
+            _jumpCoroutine = StartCoroutine(JumpCoroutine());
+            return;
+        }
+
         _currentState.Tick(this);
+    }
+
+    private IEnumerator JumpCoroutine()
+    {
+        OffMeshLinkData data = _agent.currentOffMeshLinkData;
+        // 링크 시작점이 아닌 현재 위치에서 출발해야 순간이동하지 않는다
+        Vector3 start = transform.position;
+        Vector3 end = data.endPos + Vector3.up * _agent.baseOffset;
+
+        Vector3 flat = end - start;
+        flat.y = 0f;
+        if (flat.sqrMagnitude > 0.001f)
+            transform.rotation = Quaternion.LookRotation(flat);
+
+        float duration = Mathf.Max(_minJumpDuration, flat.magnitude / _jumpSpeed);
+        // 올라가는 링크는 높이차만큼 더 솟아야 자연스럽다
+        float height = _jumpHeight + Mathf.Max(0f, end.y - start.y) * 0.5f;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            // 게임오버 등 Playing이 아니면 공중에서 멈춘다
+            if (GameManager.Instance.GameState == GameState.Playing)
+                t = Mathf.Clamp01(t + Time.deltaTime / duration);
+
+            // 직선 보간 + 4h·t(1-t) : t = 0.5에서 최고점 h
+            Vector3 position = Vector3.Lerp(start, end, t);
+            position.y += height * 4f * t * (1f - t);
+            transform.position = position;
+            yield return null;
+        }
+
+        // 링크 이동 완료 → 에이전트가 끝점부터 원래 경로를 이어간다
+        _agent.CompleteOffMeshLink();
+        _jumpCoroutine = null;
     }
 
     public void ChangeState(ZombieStateBase next)
@@ -145,20 +198,40 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         float distance = direction.magnitude;
 
-        if (distance <= 0.01f) return true;
+        if (distance <= Mathf.Max(0.1f, _agent.stoppingDistance))
+        {
+            _animModule.SetMoveAnimation(false);
+            return true;
+        }
         if (Time.deltaTime <= 0f) return false;
 
         _agent.SetDestination(target);
+        _animModule.SetMoveAnimation(true);
+
         return false;
     }
 
     public void MoveToPlayer()
     {
         _agent.SetDestination(_player.transform.position);
+        _animModule.SetMoveAnimation(true);
+    }
+
+    public void BeginAttack()
+    {
+        StopAgent();
+        _attackTimer = 0f;
+        _animModule.BeginAttack();
     }
 
     public void TickAttackTimer()
     {
+        Vector3 direction = _player.transform.position - transform.position;
+        direction.y = 0f;
+        if (direction.sqrMagnitude > 0.001f)
+            transform.rotation = Quaternion.LookRotation(direction);
+
+        if (!_animModule.IsWaitingForAttack) return;
         _attackTimer += Time.deltaTime;
         if (_attackTimer > _attackInterval)
         {
@@ -177,6 +250,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     {
         _health -= damageInfo.DamageValue;
         OnTakeHit?.Invoke();
+        SpawnBloodEffect(damageInfo);
 
         if (_health <= 0f)
         {
@@ -191,6 +265,13 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
             return;
         }
 
+        // 공중에서는 경직되지 않는다 (StopAgent의 ResetPath가 링크 이동과 충돌하므로)
+        if (IsJumping)
+        {
+            SpawnBloodEffect(damageInfo);
+            return;
+        }
+
         ChangeState(ZombieStates.Hit);
         if (_shockCoroutine != null)
         {
@@ -198,17 +279,25 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         }
         _shockCoroutine = StartCoroutine(HitCoroutine());
 
-        Transform effect = Instantiate(_bloodEffectPrefab, gameObject.transform).transform;
+    }
+
+    private void SpawnBloodEffect(DamageInfo damageInfo)
+    {
+        Transform effect = Instantiate(_bloodEffectPrefab).transform;
         effect.transform.position = damageInfo.HitPoint;
         effect.forward = damageInfo.HitNormal;
+        effect.SetParent(gameObject.transform);
     }
 
     private IEnumerator HitCoroutine()
     {
 
         StopAgent();
+        _animModule.PlayHitAnimation();
         yield return new WaitForSeconds(_shockTime);
+        yield return new WaitUntil(() => !_animModule.IsHitAnimationPlaying);
 
+        _animModule.EndHitAnimation();
         _currentState.OnShockEnd(this);
         _shockCoroutine = null;
     }
@@ -217,10 +306,14 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     {
         _agent.ResetPath();
         _agent.velocity = Vector3.zero;
+
+        _animModule.SetMoveAnimation(false);
     }
 
     private IEnumerator DeathCoroutine()
     {
+        // 점프 중에 죽으면 착지한 뒤에 쓰러진다
+        yield return new WaitUntil(() => !IsJumping);
         StopAgent();
 
         _animModule.PlayDeathAnimation();
@@ -232,6 +325,12 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
     public void HandleAttackPlayer()
     {
+        if (_currentState != ZombieStates.Attack || _health <= 0f ||
+            GameManager.Instance.GameState != GameState.Playing)
+        {
+            return;
+        }
+
         if (Physics.Raycast(_attackPosition.position, _attackPosition.forward, out RaycastHit hitInfo, _attackDistance * 1.5f, _attackableLayer))
         {
             if (hitInfo.collider.TryGetComponent(out IDamageable target))
@@ -249,12 +348,12 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         // 풀에서 재사용될 때 이전 생애의 상태를 초기화한다
         _health = _maxHealth;
+        _animModule.ResetAnimation();
         ChangeState(ZombieStates.Idle);
         _attackTimer = 0f;
         _shockCoroutine = null;
         _deathCoroutine = null;
-
-        _animModule.ResetAnimation();
+        _jumpCoroutine = null;
 
         OnTakeHit?.Invoke();    // 체력바를 가득 찬 상태로 갱신
     }
@@ -264,5 +363,12 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         StopAllCoroutines();
         _shockCoroutine = null;
         _deathCoroutine = null;
+        _jumpCoroutine = null;
+
+        // 점프 도중 회수되면 링크 점유 상태를 정리한다
+        if (_agent.isOnNavMesh && _agent.isOnOffMeshLink)
+        {
+            _agent.CompleteOffMeshLink();
+        }
     }
 }
