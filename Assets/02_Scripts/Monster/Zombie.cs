@@ -2,16 +2,18 @@ using Lean.Pool;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 //FSM(유한상태머신) : 유한개의 상태가 있고, 상태마다 행동을 다르게 함으로써 AI를 구현하는 유명한 방법
 // - State : 객체가 가질 수 잇는 어떤 조건이나 상황 (ZombieStates.cs의 상태 클래스)
 // - transition : 조건에 따라 현재 상태에서 다음 상태로 넘어가는 것 (ChangeState)
 // - Machine : 위 방식에 따라 규칙을 세워둔 것
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Zombie : MonoBehaviour, IDamageable, IPoolable
 {
     [Header("Reference")]
-    [SerializeField] private CharacterController _controller;
+    [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private ZombieAnimationModule _animModule;
     [SerializeField] private GameObject _bloodEffectPrefab;
     private GameObject _player;
@@ -70,13 +72,13 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
     private void Awake()
     {
-        if (_controller == null)
-        {
-            _controller = GetComponent<CharacterController>();
-        }
         if (_animModule == null)
         {
             _animModule = GetComponentInChildren<ZombieAnimationModule>();
+        }
+        if (_agent == null)
+        {
+            _agent = GetComponent<NavMeshAgent>();
         }
 
         _health = _maxHealth;
@@ -139,26 +141,19 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     {
         Vector3 direction = target - transform.position;
         direction.y = 0f;
+
         float distance = direction.magnitude;
 
         if (distance <= 0.01f) return true;
         if (Time.deltaTime <= 0f) return false;
 
-        transform.forward = direction.normalized;
-        float speed = Mathf.Min(Mathf.Max(0f, _moveSpeed), distance / Time.deltaTime);
-        _controller.SimpleMove(direction.normalized * speed);
+        _agent.SetDestination(target);
         return false;
     }
 
     public void MoveToPlayer()
     {
-        Vector3 direction = _player.transform.position - transform.position;
-
-        direction.y = 0;
-        direction.Normalize();
-
-        transform.forward = direction;
-        _controller.SimpleMove(direction * _moveSpeed);
+        _agent.SetDestination(_player.transform.position);
     }
 
     public void TickAttackTimer()
@@ -210,7 +205,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
     private IEnumerator HitCoroutine()
     {
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(_shockTime);
 
         _currentState.OnShockEnd(this);
         _shockCoroutine = null;
