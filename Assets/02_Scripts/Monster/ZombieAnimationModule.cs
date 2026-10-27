@@ -14,6 +14,8 @@ public class ZombieAnimationModule : MonoBehaviour
     private static readonly int MoveState = Animator.StringToHash("Base Layer.Move");
     private static readonly int DelayState = Animator.StringToHash("Base Layer.AttackProcess.AttackDelay");
     private static readonly int DeathState = Animator.StringToHash("Death");
+    private static readonly int JumpState = Animator.StringToHash("Jump");
+    private static readonly int LandingState = Animator.StringToHash("Landing");
     private static readonly int HitTrigger = Animator.StringToHash("Hit");
     private static readonly int HitState = Animator.StringToHash("Base Layer.Hit");
 
@@ -164,5 +166,15 @@ public class ZombieAnimationModule : MonoBehaviour
         if (!_canDealDamage || _mode != Mode.Attack || _owner == null) return;
         _canDealDamage = false;
         _owner.HandleAttackPlayer();
+    }
+
+    public void PlayJumpStartAnimation()
+    {
+        _anim.SetTrigger(JumpState);
+    }
+
+    public void PlayLandingAnimation()
+    {
+        _anim.SetTrigger(LandingState);
     }
 }

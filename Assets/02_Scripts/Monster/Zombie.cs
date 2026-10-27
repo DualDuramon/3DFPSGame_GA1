@@ -136,6 +136,8 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         float height = _jumpHeight + Mathf.Max(0f, end.y - start.y) * 0.5f;
 
         float t = 0f;
+        _animModule.PlayJumpStartAnimation();
+
         while (t < 1f)
         {
             // 게임오버 등 Playing이 아니면 공중에서 멈춘다
@@ -151,6 +153,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
 
         // 링크 이동 완료 → 에이전트가 끝점부터 원래 경로를 이어간다
         _agent.CompleteOffMeshLink();
+        _animModule.PlayLandingAnimation();
         _jumpCoroutine = null;
     }
 

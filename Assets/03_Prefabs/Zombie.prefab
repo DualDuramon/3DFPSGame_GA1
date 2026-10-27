@@ -619,6 +619,9 @@ MonoBehaviour:
   _health: 30
   _maxHealth: 30
   _shockTime: 0.1
+  _jumpHeight: 2.5
+  _jumpSpeed: 3
+  _minJumpDuration: 0.6
 --- !u!195 &8232564019891409082
 NavMeshAgent:
   m_ObjectHideFlags: 0
