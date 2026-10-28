@@ -21,6 +21,11 @@ public class PlayerGunFire : MonoBehaviour
     [SerializeField] private Transform _muzzle;
     [SerializeField] private BulletTrail _bulletTrail;
 
+    [Header("Animation")]
+    [SerializeField] private Animator _animator;
+
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
+
     private bool _isReloading => _reloadCoroutine != null;
     private int _bulletCount = 0;
     private float _currentFireTime = 0f;
@@ -31,6 +36,10 @@ public class PlayerGunFire : MonoBehaviour
         _status = GetComponent<PlayerCommonStatus>();
         _currentFireTime = 0f;
         _bulletCount = _maxBulletCount;
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+        }
     }
 
     private void Update()
@@ -66,6 +75,11 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Shoot()
     {
+        if (_animator != null)
+        {
+            _animator.SetTrigger(AttackHash);
+        }
+
         //2. Ray를 생성하고 발사될 위치와 진행방향 설정하기
         Transform cameraTransform = Camera.main.transform;
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward); //카메라 forward 방향으로 나가는 벡터

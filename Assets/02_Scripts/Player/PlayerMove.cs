@@ -10,6 +10,12 @@ public class PlayerMove : MonoBehaviour
     [Header("References")]
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _movementCamera;
+    [SerializeField] private Animator _animator;
+
+    [Header("Animation")]
+    [SerializeField] private float _moveAnimDampTime = 0.1f;
+
+    private static readonly int MoveMotionHash = Animator.StringToHash("MoveMotion");
 
     private PlayerCommonStatus _status;
 
@@ -37,6 +43,10 @@ public class PlayerMove : MonoBehaviour
                 _movementCamera = mainCamera.transform;
             }
         }
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+        }
 
         if (_characterController == null || _movementCamera == null)
         {
@@ -58,6 +68,11 @@ public class PlayerMove : MonoBehaviour
         Vector3 forward = Vector3.Cross(right, Vector3.up);
         Vector3 direction = (right * h + forward * v).normalized;
 
+        // 이동 입력 크기(0: 정지 ~ 1: 이동)를 블렌드 트리에 전달합니다.
+        if (_animator != null)
+        {
+            _animator.SetFloat(MoveMotionHash, direction.magnitude, _moveAnimDampTime, Time.deltaTime);
+        }
 
         float needStamina = _sprintCost * Time.deltaTime;
         bool isSprint = Input.GetButton("Sprint") && _status.TryUseStamina(needStamina);
