@@ -24,7 +24,7 @@ public class PlayerGunFire : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator _animator;
 
-    private static readonly int AttackHash = Animator.StringToHash("Attack");
+    private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
 
     private bool _isReloading => _reloadCoroutine != null;
     private int _bulletCount = 0;
@@ -47,12 +47,17 @@ public class PlayerGunFire : MonoBehaviour
         if (GameManager.Instance.GameState != GameState.Playing) return;
 
         bool isMouseVisible = Cursor.visible;
+        bool canAttack = Input.GetButton("Fire1") && !isMouseVisible && _bulletCount > 0;
+
+        // 발사 버튼을 누르고 있는 동안 상체 사격 애니메이션을 유지합니다.
+        if (_animator != null)
+        {
+            _animator.SetBool(IsAttackingHash, canAttack);
+        }
 
         //1. 마우스 오른쪽 버튼 입력 받기
-        if (Input.GetButton("Fire1")
-            && !isMouseVisible
-            && Time.time - _currentFireTime > _status.FireInterval
-            && _bulletCount > 0) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
+        if (canAttack
+            && Time.time - _currentFireTime > _status.FireInterval) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
             Shoot();
             _bulletCount--;
@@ -75,10 +80,6 @@ public class PlayerGunFire : MonoBehaviour
 
     private void Shoot()
     {
-        if (_animator != null)
-        {
-            _animator.SetTrigger(AttackHash);
-        }
 
         //2. Ray를 생성하고 발사될 위치와 진행방향 설정하기
         Transform cameraTransform = Camera.main.transform;
