@@ -25,6 +25,12 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     [SerializeField] private float _fireInterval = 0.1f;
     [SerializeField] private float _range = 100f;
 
+    [Header("Animation")]
+    [SerializeField] private Animator _animator;
+
+    private const string InjuredLayerName = "InjuredLayer";
+    private int _injuredLayerIndex = -1;
+
 
     public float CurrentHealth => _currentHealth;
     public float MaxHealth => _maxHealth;
@@ -47,6 +53,16 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     {
         _currentHealth = Mathf.Max(0f, _maxHealth);
         _currentStamina = Mathf.Max(0f, _maxStamina);
+
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+        }
+        if (_animator != null)
+        {
+            _injuredLayerIndex = _animator.GetLayerIndex(InjuredLayerName);
+        }
+        UpdateInjuredLayerWeight();
     }
 
     private void Update()
@@ -66,11 +82,22 @@ public class PlayerCommonStatus : MonoBehaviour, IDamageable
     public void TakeDamage(DamageInfo damageInfo)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - Mathf.Max(0f, damageInfo.DamageValue), 0f, Mathf.Max(0f, _maxHealth));
+        UpdateInjuredLayerWeight();
         OnTakeHit?.Invoke();
         if (_currentHealth <= 0f)
         {
             HandleDeath();
         }
+    }
+
+    /// <summary>
+    /// 잃은 체력 비율만큼 부상 레이어의 가중치를 올립니다. (체력 가득: 0, 체력 0: 1)
+    /// </summary>
+    private void UpdateInjuredLayerWeight()
+    {
+        if (_animator == null || _injuredLayerIndex < 0) return;
+
+        _animator.SetLayerWeight(_injuredLayerIndex, 1f - CurrentHealthRatio);
     }
 
     private void HandleDeath()
