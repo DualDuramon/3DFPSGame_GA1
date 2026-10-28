@@ -16,7 +16,13 @@ public class PlayerBombFire : MonoBehaviour
     [SerializeField] private float _minThrowPower = 2f;
     [SerializeField] private float _throwPowerIncreaseRatio = 5f;
     private float _currentThrowPower = 0f;
+    private float _pendingThrowPower = 0f;
     private int _currentBombCount = 0;
+
+    [Header("Animation")]
+    [SerializeField] private Animator _animator;
+
+    private static readonly int GrenadeThrowHash = Animator.StringToHash("GrenadeThrow");
 
     private bool _isCharging = false;
 
@@ -24,6 +30,10 @@ public class PlayerBombFire : MonoBehaviour
     private void Awake()
     {
         _currentBombCount = _initialBombCount;
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+        }
     }
 
     private void Update()
@@ -49,14 +59,35 @@ public class PlayerBombFire : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 우클릭을 놓는 순간 파워를 기억해두고 투척 애니메이션을 재생합니다.
+    /// 실제 수류탄 생성은 애니메이션 이벤트(OnThrowBombEvent)에서 일어납니다.
+    /// </summary>
     private void ThrowBomb()
     {
-        if (ThrowProjectile(_grenadePrefab))
+        _currentBombCount--;
+        _pendingThrowPower = _currentThrowPower;
+
+        if (_animator != null)
         {
-            _currentBombCount--;
+            _animator.SetTrigger(GrenadeThrowHash);
+        }
+        else
+        {
+            // 애니메이터가 없으면 이벤트가 오지 않으므로 바로 던집니다.
+            OnThrowBombEvent();
         }
     }
-    private bool ThrowProjectile(GameObject projectilePrefab)
+
+    /// <summary>
+    /// 투척 애니메이션 클립의 ThrowBomb 이벤트에서 호출됩니다. (PlayerAnimationEvents가 중계)
+    /// </summary>
+    public void OnThrowBombEvent()
+    {
+        ThrowProjectile(_grenadePrefab, _pendingThrowPower);
+    }
+
+    private bool ThrowProjectile(GameObject projectilePrefab, float throwPower)
     {
         if (projectilePrefab == null)
         {
@@ -69,7 +100,7 @@ public class PlayerBombFire : MonoBehaviour
 
         if (generated.TryGetComponent(out BombProjectile proj))
         {
-            proj.Throw(Camera.main.transform.forward * _currentThrowPower);
+            proj.Throw(Camera.main.transform.forward * throwPower);
         }
 
         return true;

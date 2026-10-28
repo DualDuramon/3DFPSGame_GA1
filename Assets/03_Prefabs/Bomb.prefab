@@ -159,4 +159,4 @@ MonoBehaviour:
   _explosionRadius: 3
   _damageableLayer:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 577
