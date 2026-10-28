@@ -49,16 +49,16 @@ ModelImporter:
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 1
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      bodyMask: 01000000010000000100000001000000010000000000000000000000000000000000000001000000010000000000000000000000
       curves: []
       events: []
       transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
+      maskType: 1
+      maskSource: {fileID: 31900000, guid: f0ef6f26e484d424eaa9b377bddb7640, type: 2}
       additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
