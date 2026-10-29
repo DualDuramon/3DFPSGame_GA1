@@ -4336,6 +4336,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &587749055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 587749057}
+  - component: {fileID: 587749056}
+  m_Layer: 0
+  m_Name: NightVision Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &587749056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587749055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 10
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 0abbc566941057040b2bfe033ac22881, type: 2}
+--- !u!4 &587749057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587749055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &593088926
 GameObject:
   m_ObjectHideFlags: 0
@@ -8497,6 +8546,7 @@ GameObject:
   - component: {fileID: 1429056569}
   - component: {fileID: 1429056570}
   - component: {fileID: 1429056572}
+  - component: {fileID: 1429056573}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -8658,6 +8708,21 @@ MonoBehaviour:
   _animator: {fileID: 1951881837}
   _zoomImage: {fileID: 968697227}
   _targetFOV: 15
+--- !u!114 &1429056573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429056560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ea90c10feec32a40a226c05b3aa83df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPostProcessingController
+  _nightVisionVolume: {fileID: 587749056}
+  _toggleKey: 116
+  _fadeSpeed: 8
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0
@@ -12433,3 +12498,4 @@ SceneRoots:
   - {fileID: 860191151}
   - {fileID: 184699767}
   - {fileID: 1900000002}
+  - {fileID: 587749057}

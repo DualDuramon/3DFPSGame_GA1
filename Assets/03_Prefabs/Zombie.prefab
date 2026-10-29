@@ -604,7 +604,7 @@ MonoBehaviour:
   _animModule: {fileID: 0}
   _bloodEffectPrefab: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
   _moveSpeed: 3
-  _detectDistance: 2
+  _detectDistance: 5
   _startPosition: {x: 0, y: 0, z: 0}
   _combackDistance: 15
   _roamingRadius: 3
