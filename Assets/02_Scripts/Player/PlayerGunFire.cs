@@ -10,7 +10,7 @@ using UnityEngine;
 public class PlayerGunFire : MonoBehaviour
 {
     [Header("References")]
-    private PlayerCommonStatus _status;
+    [SerializeField] private PlayerCommonStatus _status;
 
     [SerializeField] private WeaponMode _weaponMode;
 
@@ -27,6 +27,10 @@ public class PlayerGunFire : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private Animator _animator;
+
+    [Header("MuzzleFlahs")]
+    [SerializeField] private GameObject[] _muzzleFlashes;
+    [SerializeField] private float _flashTime = 0.05f;
 
     public event Action OnGunFired; //current Bullet / Max Bullet
     public event Action OnWeaponModeSwitched; //currentSwitchedMode
@@ -139,6 +143,8 @@ public class PlayerGunFire : MonoBehaviour
                 damagable.TakeDamage(info);
             }
         }
+
+        StartCoroutine(MuzzleFlash_Coroutine());
     }
 
     private IEnumerator Reloading_Coroutine()
@@ -150,5 +156,16 @@ public class PlayerGunFire : MonoBehaviour
         _bulletCount = _maxBulletCount;
         OnWeaponReloadEnd?.Invoke();
         _reloadCoroutine = null;
+    }
+
+    private IEnumerator MuzzleFlash_Coroutine() //코루틴으로 flash 하는것도 정답은 아니다!
+    {
+        int randomNum = UnityEngine.Random.Range(0, _muzzleFlashes.Length);
+
+        _muzzleFlashes[randomNum].SetActive(true);
+
+        yield return new WaitForSeconds(_flashTime);
+
+        _muzzleFlashes[randomNum].SetActive(false);
     }
 }
