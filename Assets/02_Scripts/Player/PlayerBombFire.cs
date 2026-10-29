@@ -9,6 +9,7 @@ public class PlayerBombFire : MonoBehaviour
     [Header("Reference")]
     [SerializeField] private GameObject _grenadePrefab;
     [SerializeField] private Transform _throwPosition;
+    [SerializeField] private PlayerGunFire _playerGun;
 
     [Header("Throw Settings")]
     [SerializeField] private int _initialBombCount = 10;
@@ -34,11 +35,19 @@ public class PlayerBombFire : MonoBehaviour
         {
             _animator = GetComponentInChildren<Animator>();
         }
+        if (_playerGun == null)
+        {
+            _playerGun = GetComponent<PlayerGunFire>();
+        }
     }
 
     private void Update()
     {
-        if (GameManager.Instance.GameState != GameState.Playing) return;
+        if (GameManager.Instance.GameState != GameState.Playing
+            || _playerGun.WeaponMode != WeaponMode.Normal)
+        {
+            return;
+        }
 
         if (Input.GetButtonDown("Fire2") && _currentBombCount > 0)
         {

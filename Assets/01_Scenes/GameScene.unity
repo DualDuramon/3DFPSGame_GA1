@@ -1426,8 +1426,8 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400046, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
       insertIndex: 0
       addedObject: {fileID: 1444504120}
-    - targetCorrespondingSourceObject: {fileID: 400038, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
-      insertIndex: -1
+    - targetCorrespondingSourceObject: {fileID: 400046, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
+      insertIndex: 1
       addedObject: {fileID: 1279097638}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100060, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
@@ -6086,7 +6086,7 @@ Transform:
   m_GameObject: {fileID: 1084035756}
   serializedVersion: 2
   m_LocalRotation: {x: 0.50000006, y: -0.49999928, z: -0.5, w: -0.50000066}
-  m_LocalPosition: {x: -0.16, y: 0.599, z: -0.02}
+  m_LocalPosition: {x: -0.128, y: 0.279, z: 0.011}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7245,7 +7245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1279097635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7349,13 +7349,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279097634}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.61705256, y: -0.26756197, z: -0.17269512, w: 0.7196062}
-  m_LocalPosition: {x: -0.11104654, y: 0.25914085, z: 0.1541047}
+  m_LocalRotation: {x: 0.5292065, y: -0.41526237, z: -0.3498327, w: 0.6520083}
+  m_LocalPosition: {x: -0.061737176, y: 0.28015542, z: 0.15432824}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 103939600}
-  m_Father: {fileID: 1464488694}
+  m_Father: {fileID: 649151178}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1279097639
 MonoBehaviour:
@@ -8036,6 +8036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4833f7fd82dcf43ba1df7653128937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGunFire
+  _weaponMode: 0
   _maxBulletCount: 30
   _reloadingTime: 3
   _hitEffectPrefab: {fileID: 19800002, guid: 54dd9cb5740188a488b8baebbf19207c, type: 3}
@@ -8056,8 +8057,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBombFire
   _grenadePrefab: {fileID: 7697214890902402798, guid: e0b1a3581a9ab624589b30544522f8a4, type: 3}
   _throwPosition: {fileID: 556105408}
+  _playerGun: {fileID: 0}
   _initialBombCount: 10
-  _maxThrowPower: 10
+  _maxThrowPower: 20
   _minThrowPower: 2
   _throwPowerIncreaseRatio: 5
   _animator: {fileID: 0}
@@ -8094,12 +8096,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429056560}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 008705b0bfe76b9429bbd5a523be632b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerZooming
+  _playerGun: {fileID: 1429056568}
   _animator: {fileID: 1951881837}
+  _targetFOV: 15
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0
@@ -8312,11 +8316,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461507769}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1464488694 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400038, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
-  m_PrefabInstance: {fileID: 114991776}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1492555481
 GameObject:
   m_ObjectHideFlags: 0

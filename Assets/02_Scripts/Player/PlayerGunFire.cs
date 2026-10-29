@@ -8,7 +8,10 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerCommonStatus))]
 public class PlayerGunFire : MonoBehaviour
 {
+    [Header("References")]
     private PlayerCommonStatus _status;
+
+    [SerializeField] private WeaponMode _weaponMode;
 
     [Header("Reloading")]
     [SerializeField] private int _maxBulletCount = 30;
@@ -30,6 +33,8 @@ public class PlayerGunFire : MonoBehaviour
     private int _bulletCount = 0;
     private float _currentFireTime = 0f;
     private Coroutine _reloadCoroutine;
+
+    public WeaponMode WeaponMode => _weaponMode;
 
     private void Awake()
     {
@@ -75,6 +80,16 @@ public class PlayerGunFire : MonoBehaviour
         if (Input.GetButtonDown("Reload") && !_isReloading)
         {
             _reloadCoroutine = StartCoroutine(Reloading_Coroutine());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _weaponMode = WeaponMode.Normal;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _weaponMode = WeaponMode.Sniper;
         }
     }
 
