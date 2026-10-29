@@ -1,4 +1,5 @@
 using Lean.Pool;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -27,6 +28,9 @@ public class PlayerBombFire : MonoBehaviour
 
     private bool _isCharging = false;
 
+    public int CurrentBombCount => _currentBombCount;
+
+    public event Action OnBombThrowed;
 
     private void Awake()
     {
@@ -94,6 +98,7 @@ public class PlayerBombFire : MonoBehaviour
     public void OnThrowBombEvent()
     {
         ThrowProjectile(_grenadePrefab, _pendingThrowPower);
+        OnBombThrowed?.Invoke();
     }
 
     private bool ThrowProjectile(GameObject projectilePrefab, float throwPower)

@@ -1,4 +1,5 @@
 using Lean.Pool;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -27,14 +28,21 @@ public class PlayerGunFire : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator _animator;
 
+    public event Action OnGunFired; //current Bullet / Max Bullet
+    public event Action OnWeaponModeSwitched; //currentSwitchedMode
+    public event Action OnWeaponReloadStart;
+    public event Action OnWeaponReloadEnd;
+
     private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
 
     private bool _isReloading => _reloadCoroutine != null;
     private int _bulletCount = 0;
     private float _currentFireTime = 0f;
     private Coroutine _reloadCoroutine;
-
     public WeaponMode WeaponMode => _weaponMode;
+    public int MaxBulletCount => _maxBulletCount;
+    public int CurrentBulletCount => _bulletCount;
+
 
     private void Awake()
     {
@@ -68,6 +76,8 @@ public class PlayerGunFire : MonoBehaviour
             _bulletCount--;
             _currentFireTime = Time.time;
 
+            OnGunFired?.Invoke();
+
             if (_isReloading)
             {
                 //StopAllCoroutine() //이 방식은 이 모노비헤이비어의 모든 코루틴을 종료
@@ -85,11 +95,12 @@ public class PlayerGunFire : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             _weaponMode = WeaponMode.Normal;
+            OnWeaponModeSwitched?.Invoke();
         }
-
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             _weaponMode = WeaponMode.Sniper;
+            OnWeaponModeSwitched?.Invoke();
         }
     }
 
@@ -132,9 +143,12 @@ public class PlayerGunFire : MonoBehaviour
 
     private IEnumerator Reloading_Coroutine()
     {
+        _bulletCount = 0;
+        OnWeaponReloadStart?.Invoke();
         yield return new WaitForSeconds(_reloadingTime);
 
         _bulletCount = _maxBulletCount;
+        OnWeaponReloadEnd?.Invoke();
         _reloadCoroutine = null;
     }
 }
