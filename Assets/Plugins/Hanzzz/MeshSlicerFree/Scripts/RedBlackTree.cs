@@ -14,7 +14,7 @@ namespace Hanzzz.MeshSlicerFree
         public Node<T> right;
         public Node<T> parent;
         public static Node<T> Null = new Node<T>(B);
-        public Node(T value,RBTColor color,Node<T> left,Node<T> right,Node<T> parent)
+        public Node(T value, RBTColor color, Node<T> left, Node<T> right, Node<T> parent)
         {
             this.value = value;
             this.color = color;
@@ -22,7 +22,7 @@ namespace Hanzzz.MeshSlicerFree
             this.right = right;
             this.parent = parent;
         }
-        public Node(T value,Node<T> left,Node<T> right,Node<T> parent)
+        public Node(T value, Node<T> left, Node<T> right, Node<T> parent)
         {
             this.value = value;
             this.left = left;
@@ -52,12 +52,12 @@ namespace Hanzzz.MeshSlicerFree
 
         public Node<T> GetMinNode()
         {
-            if(Node<T>.Null == root)
+            if (Node<T>.Null == root)
             {
                 return Node<T>.Null;
             }
             Node<T> res = root;
-            while(res.left != Node<T>.Null)
+            while (res.left != Node<T>.Null)
             {
                 res = res.left;
             }
@@ -65,12 +65,12 @@ namespace Hanzzz.MeshSlicerFree
         }
         public Node<T> GetMaxNode()
         {
-            if(Node<T>.Null == root)
+            if (Node<T>.Null == root)
             {
                 return Node<T>.Null;
             }
             Node<T> res = root;
-            while(res.right != Node<T>.Null)
+            while (res.right != Node<T>.Null)
             {
                 res = res.right;
             }
@@ -85,13 +85,13 @@ namespace Hanzzz.MeshSlicerFree
             // traverse tree until node is found, record every left turn
             while (treeNode != Node<T>.Null)
             {
-                result = comparer.Compare(value,treeNode.value);
-                if(result < 0)
+                result = comparer.Compare(value, treeNode.value);
+                if (result < 0)
                 {
                     res = treeNode;
                     treeNode = treeNode.left;
                 }
-                else if(result > 0)
+                else if (result > 0)
                 {
                     treeNode = treeNode.right;
                 }
@@ -106,19 +106,19 @@ namespace Hanzzz.MeshSlicerFree
         // returns the next node
         public Node<T> GetNextNode(Node<T> node)
         {
-            if(Node<T>.Null != node.right)
+            if (Node<T>.Null != node.right)
             {
                 node = node.right;
-                while(Node<T>.Null != node.left)
+                while (Node<T>.Null != node.left)
                 {
                     node = node.left;
                 }
                 return node;
             }
 
-            while(Node<T>.Null != node.parent)
+            while (Node<T>.Null != node.parent)
             {
-                if(node.parent.left == node)
+                if (node.parent.left == node)
                 {
                     return node.parent;
                 }
@@ -130,19 +130,19 @@ namespace Hanzzz.MeshSlicerFree
         // returns the previous node
         public Node<T> GetPreviousNode(Node<T> node)
         {
-            if(Node<T>.Null != node.left)
+            if (Node<T>.Null != node.left)
             {
                 node = node.left;
-                while(Node<T>.Null != node.right)
+                while (Node<T>.Null != node.right)
                 {
                     node = node.right;
                 }
                 return node;
             }
 
-            while(Node<T>.Null != node.parent)
+            while (Node<T>.Null != node.parent)
             {
-                if(node.parent.right == node)
+                if (node.parent.right == node)
                 {
                     return node.parent;
                 }
@@ -157,19 +157,19 @@ namespace Hanzzz.MeshSlicerFree
         }
         public Node<T> GetNode(T val, Node<T> N)
         {
-            if(N == Node<T>.Null)
+            if (N == Node<T>.Null)
             {
                 return Node<T>.Null;
             }
 
             int res = comparer.Compare(N.value, val);
-            if(res < 0)
+            if (res < 0)
             {
-                return GetNode(val,N.right);
+                return GetNode(val, N.right);
             }
-            if(res > 0)
+            if (res > 0)
             {
-                return GetNode(val,N.left);
+                return GetNode(val, N.left);
             }
             return N;
         }
@@ -186,16 +186,16 @@ namespace Hanzzz.MeshSlicerFree
         {
             var y = x.right;
             x.right = y.left;
-            if(y.left != Node<T>.Null)
+            if (y.left != Node<T>.Null)
             {
                 y.left.parent = x;
             }
             y.parent = x.parent;
-            if(x.parent == Node<T>.Null)
+            if (x.parent == Node<T>.Null)
             {
                 root = y;
             }
-            else if(x == x.parent.left)
+            else if (x == x.parent.left)
             {
                 x.parent.left = y;
             }
@@ -211,16 +211,16 @@ namespace Hanzzz.MeshSlicerFree
         {
             var y = x.left;
             x.left = y.right;
-            if(y.right != Node<T>.Null)
+            if (y.right != Node<T>.Null)
             {
                 y.right.parent = x;
             }
             y.parent = x.parent;
-            if(x.parent == Node<T>.Null)
+            if (x.parent == Node<T>.Null)
             {
                 root = y;
             }
-            else if(x == x.parent.right)
+            else if (x == x.parent.right)
             {
                 x.parent.right = y;
             }
@@ -234,12 +234,12 @@ namespace Hanzzz.MeshSlicerFree
         }
         private void InsertFixUp(Node<T> z)
         {
-            while(z.parent.color == R)
+            while (z.parent.color == R)
             {
-                if(z.parent == z.parent.parent.left)
+                if (z.parent == z.parent.parent.left)
                 {
                     var y = z.parent.parent.right;
-                    if(y.color == R)
+                    if (y.color == R)
                     {
                         z.parent.color = B;
                         y.color = B;
@@ -248,7 +248,7 @@ namespace Hanzzz.MeshSlicerFree
                     }
                     else
                     {
-                        if(z == z.parent.right)
+                        if (z == z.parent.right)
                         {
                             z = z.parent;
                             this.LeftRotate(z);
@@ -261,7 +261,7 @@ namespace Hanzzz.MeshSlicerFree
                 else
                 {
                     var y = z.parent.parent.left;
-                    if(y.color == R)
+                    if (y.color == R)
                     {
                         z.parent.color = B;
                         y.color = B;
@@ -270,7 +270,7 @@ namespace Hanzzz.MeshSlicerFree
                     }
                     else
                     {
-                        if(z == z.parent.left)
+                        if (z == z.parent.left)
                         {
                             z = z.parent;
                             this.RightRotate(z);
@@ -286,7 +286,7 @@ namespace Hanzzz.MeshSlicerFree
 
         public bool Insert(T f)
         {
-            if(Contains(f,root))
+            if (Contains(f, root))
             {
                 return false;
             }
@@ -296,10 +296,10 @@ namespace Hanzzz.MeshSlicerFree
 
                 var y = Node<T>.Null;
                 var x = root;
-                while(x != Node<T>.Null)
+                while (x != Node<T>.Null)
                 {
                     y = x;
-                    if(comparer.Compare(z.value,x.value) < 0)
+                    if (comparer.Compare(z.value, x.value) < 0)
                     {
                         x = x.left;
                     }
@@ -309,13 +309,13 @@ namespace Hanzzz.MeshSlicerFree
                     }
                 }
                 z.parent = y;
-                if(y == Node<T>.Null)
+                if (y == Node<T>.Null)
                 {
                     root = z;
                 }
                 else
                 {
-                    if(comparer.Compare(z.value,y.value) < 0)
+                    if (comparer.Compare(z.value, y.value) < 0)
                     {
                         y.left = z;
                     }
@@ -332,28 +332,28 @@ namespace Hanzzz.MeshSlicerFree
                 return true;
             }
         }
-        private Node<T> ContainsGiveMeNode(T val,Node<T> N)
+        private Node<T> ContainsGiveMeNode(T val, Node<T> N)
         {
-            if(N == Node<T>.Null)
+            if (N == Node<T>.Null)
             {
                 return Node<T>.Null;
             }
 
             int res = comparer.Compare(N.value, val);
-            if(res < 0)
+            if (res < 0)
             {
-                return ContainsGiveMeNode(val,N.right);
+                return ContainsGiveMeNode(val, N.right);
             }
-            if(res > 0)
+            if (res > 0)
             {
-                return ContainsGiveMeNode(val,N.left);
+                return ContainsGiveMeNode(val, N.left);
             }
             return N;
         }
         private static Node<T> GiveMeDeleteReplacement(Node<T> t)
         {
             Node<T> temp = t.right;
-            while(temp.left != Node<T>.Null)
+            while (temp.left != Node<T>.Null)
             {
                 temp = temp.left;
             }
@@ -361,26 +361,26 @@ namespace Hanzzz.MeshSlicerFree
         }
         public void DeleteFixUp(Node<T> x)
         {
-            while((x != root) && (x.color == B))
+            while ((x != root) && (x.color == B))
             {
-                if(x == x.parent.left)
+                if (x == x.parent.left)
                 {
                     var w = x.parent.right;
-                    if(w.color == R)
+                    if (w.color == R)
                     {
                         w.color = B;
                         x.parent.color = R;
                         this.LeftRotate(x.parent);
                         w = x.parent.right;
                     }
-                    if((w.left.color == B) && (w.right.color == B))
+                    if ((w.left.color == B) && (w.right.color == B))
                     {
                         w.color = R;
                         x = x.parent;
                     }
                     else
                     {
-                        if(w.right.color == B)
+                        if (w.right.color == B)
                         {
                             w.left.color = B;
                             w.color = R;
@@ -397,21 +397,21 @@ namespace Hanzzz.MeshSlicerFree
                 else
                 {
                     var w = x.parent.left;
-                    if(w.color == R)
+                    if (w.color == R)
                     {
                         w.color = B;
                         x.parent.color = R;
                         this.RightRotate(x.parent);
                         w = x.parent.left;
                     }
-                    if((w.right.color == B) && (w.left.color == B))
+                    if ((w.right.color == B) && (w.left.color == B))
                     {
                         w.color = R;
                         x = x.parent;
                     }
                     else
                     {
-                        if(w.left.color == B)
+                        if (w.left.color == B)
                         {
                             w.right.color = B;
                             w.color = R;
@@ -431,7 +431,7 @@ namespace Hanzzz.MeshSlicerFree
 
         public bool Delete(T f)
         {
-            if(!Contains(f,root))
+            if (!Contains(f, root))
             {
                 return false;
             }
@@ -445,8 +445,8 @@ namespace Hanzzz.MeshSlicerFree
         {
             Node<T> x;
             Node<T> y;
-            
-            if(z.left == Node<T>.Null || z.right == Node<T>.Null)
+
+            if (z.left == Node<T>.Null || z.right == Node<T>.Null)
             {
                 y = z;
             }
@@ -454,7 +454,7 @@ namespace Hanzzz.MeshSlicerFree
             {
                 y = GiveMeDeleteReplacement(z);
             }
-            if(y.left != Node<T>.Null)
+            if (y.left != Node<T>.Null)
             {
                 x = y.left;
             }
@@ -465,13 +465,13 @@ namespace Hanzzz.MeshSlicerFree
 
             x.parent = y.parent;
 
-            if(y.parent == Node<T>.Null)
+            if (y.parent == Node<T>.Null)
             {
                 root = x;
             }
             else
             {
-                if(y == y.parent.left)
+                if (y == y.parent.left)
                 {
                     y.parent.left = x;
                 }
@@ -480,34 +480,34 @@ namespace Hanzzz.MeshSlicerFree
                     y.parent.right = x;
                 }
             }
-            if(y != z)
+            if (y != z)
             {
                 z.value = y.value;
             }
-            if(y.color == B)
+            if (y.color == B)
             {
                 this.DeleteFixUp(x);
             }
         }
 
-        private int BlackHeight(Node<T> n,int counter)
+        private int BlackHeight(Node<T> n, int counter)
         {
-            if(n == null)
+            if (n == null)
             {
                 return 1;
             }
-            if(n.color == B)
+            if (n.color == B)
             {
                 counter++;
 
             }
-            if((n.left == null) && (n.right == null))
+            if ((n.left == null) && (n.right == null))
             {
                 return counter;
             }
-            else if((n.left != null) && (n.right == null))
+            else if ((n.left != null) && (n.right == null))
             {
-                if(counter == BlackHeight(n.left,counter))
+                if (counter == BlackHeight(n.left, counter))
                 {
                     return counter;
                 }
@@ -516,9 +516,9 @@ namespace Hanzzz.MeshSlicerFree
                     return -1;
                 }
             }
-            else if((n.left == null) && (n.right != null))
+            else if ((n.left == null) && (n.right != null))
             {
-                if(counter == BlackHeight(n.right,counter))
+                if (counter == BlackHeight(n.right, counter))
                 {
                     return counter;
                 }
@@ -527,15 +527,15 @@ namespace Hanzzz.MeshSlicerFree
                     return -1;
                 }
             }
-            else if((n.left != null) && (n.right != null))
+            else if ((n.left != null) && (n.right != null))
             {
-                if(BlackHeight(n.left,counter) != BlackHeight(n.right,counter))
+                if (BlackHeight(n.left, counter) != BlackHeight(n.right, counter))
                 {
                     return -1;
                 }
                 else
                 {
-                    return BlackHeight(n.left,counter);
+                    return BlackHeight(n.left, counter);
                 }
             }
 
@@ -547,22 +547,22 @@ namespace Hanzzz.MeshSlicerFree
         }
         private bool RedCondition(Node<T> n)
         {
-            if(n == Node<T>.Null)
+            if (n == Node<T>.Null)
             {
                 return true;
             }
-            if(n.color == R)
+            if (n.color == R)
             {
-                if((n.left.color == R) || (n.right.color == R))
+                if ((n.left.color == R) || (n.right.color == R))
                 {
                     return false;
                 }
             }
-            if(n.left != Node<T>.Null)
+            if (n.left != Node<T>.Null)
             {
                 return RedCondition(n.left);
             }
-            if(n.right != Node<T>.Null)
+            if (n.right != Node<T>.Null)
             {
                 return RedCondition(n.right);
             }
@@ -570,7 +570,7 @@ namespace Hanzzz.MeshSlicerFree
         }
         private bool RootBlack(Tree<T> t)
         {
-            if(t.root.color == B)
+            if (t.root.color == B)
             {
                 return true;
             }
@@ -581,21 +581,21 @@ namespace Hanzzz.MeshSlicerFree
         }
         public bool Check()
         {
-            if((BlackHeight(root,0) == -1) || !RedCondition(root) || !RootBlack(this))
+            if ((BlackHeight(root, 0) == -1) || !RedCondition(root) || !RootBlack(this))
             {
                 return false;
             }
 
             Node<T> cur = GetMinNode();
-            if(Node<T>.Null == cur)
+            if (Node<T>.Null == cur)
             {
                 return true;
             }
 
             Node<T> next = GetNextNode(cur);
-            while(Node<T>.Null != next)
+            while (Node<T>.Null != next)
             {
-                if(comparer.Compare(cur.value,next.value) > 0)
+                if (comparer.Compare(cur.value, next.value) > 0)
                 {
                     return false;
                 }

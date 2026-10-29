@@ -90,6 +90,7 @@ public class Zombie : MonoBehaviour, IDamageable, IPoolable
         }
         // 링크를 자동으로 건너면 직선으로 미끄러지므로, 직접 포물선으로 점프시킨다 (JumpCoroutine)
         _agent.autoTraverseOffMeshLink = false;
+        _agent.speed = _moveSpeed;
 
         _health = _maxHealth;
     }

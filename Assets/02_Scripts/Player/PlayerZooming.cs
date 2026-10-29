@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerZooming : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private PlayerGunFire _playerGun;
     [SerializeField] private Animator _animator;
+    [SerializeField] private Image _zoomImage;
+
+    [Header("Zoom Settings")]
     [SerializeField] private float _targetFOV = 15f;
     private float _initalFOV = 60f;
 
@@ -24,6 +29,11 @@ public class PlayerZooming : MonoBehaviour
         {
             _playerGun = GetComponent<PlayerGunFire>();
         }
+        if (_zoomImage == null)
+        {
+            GameLogger.LogWarning($"{name}: UI Doesn't Find!");
+        }
+
         _targetCamera = Camera.main;
         _initalFOV = _targetCamera.fieldOfView;
     }
@@ -35,6 +45,7 @@ public class PlayerZooming : MonoBehaviour
         if (Input.GetButtonDown("Fire2"))
         {
             _isZooming = true;
+            _zoomImage.gameObject.SetActive(true);
             //_animator.SetBool(_zoomHash, true);
         }
 
@@ -42,6 +53,7 @@ public class PlayerZooming : MonoBehaviour
         if (Input.GetButtonUp("Fire2") && _isZooming)
         {
             _isZooming = false;
+            _zoomImage.gameObject.SetActive(false);
             //_animator.SetBool(_zoomHash, false);
         }
         if (_isZooming)

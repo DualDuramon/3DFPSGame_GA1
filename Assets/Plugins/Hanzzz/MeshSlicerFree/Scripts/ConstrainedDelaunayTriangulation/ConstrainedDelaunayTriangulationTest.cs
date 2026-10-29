@@ -5,100 +5,100 @@ using UnityEngine;
 namespace Hanzzz.MeshSlicerFree
 {
 
-public class ConstrainedDelaunayTriangulationTest : MonoBehaviour
-{
-    public Transform pointsParent;
-    public GameObject pointPrefab;
-    public TextAsset polygonFile;
-    [Range(3,1000)] public int pointCount;
-    [Range(0f,20f)] public float pointRange;
-    [Range(0f,0.2f)]public float pointScale;
-    public MeshFilter resultMesh;
-
-
-    [ContextMenu("Triangulate")]
-    public void Triangulate()
+    public class ConstrainedDelaunayTriangulationTest : MonoBehaviour
     {
-        HashSet<Point2D> positions = new HashSet<Point2D>();
-        foreach(Transform child in pointsParent)
+        public Transform pointsParent;
+        public GameObject pointPrefab;
+        public TextAsset polygonFile;
+        [Range(3, 1000)] public int pointCount;
+        [Range(0f, 20f)] public float pointRange;
+        [Range(0f, 0.2f)] public float pointScale;
+        public MeshFilter resultMesh;
+
+
+        [ContextMenu("Triangulate")]
+        public void Triangulate()
         {
-            if(false == child.gameObject.activeSelf)
+            HashSet<Point2D> positions = new HashSet<Point2D>();
+            foreach (Transform child in pointsParent)
             {
-                continue;
+                if (false == child.gameObject.activeSelf)
+                {
+                    continue;
+                }
+                positions.Add(new Point2D(child.position));
             }
-            positions.Add(new Point2D(child.position));
-        }
-        List<int> edges = new List<int>();
-        for(int i=0; i<positions.Count; i++)
-        {
-            edges.Add(i);
-            edges.Add((i+1)%positions.Count);
-        }
-        ConstrainedDelaunayTriangulation cdt = new ConstrainedDelaunayTriangulation();
-        var res = cdt.Triangulate(positions.ToList(),edges);
-
-        Mesh m = new Mesh();
-        m.vertices = positions.Select(x=>(Vector3)(x.ToVector2())).ToArray();
-        m.triangles = res.ToArray();
-        resultMesh.mesh = m;
-    }
-
-    [ContextMenu("Read File")]
-    public void ReadFile()
-    {
-        int n=3;
-        string[] data = polygonFile.text.Split(new char[]{',','\n'});
-        HashSet<(int,int)> coor = new HashSet<(int, int)>();
-        for(int i=2; i<data.Length; i+=3)
-        {
-            int x = int.Parse(data[i-2]);
-            int y = int.Parse(data[i-1]);
-            if(coor.Contains((x,y)))
+            List<int> edges = new List<int>();
+            for (int i = 0; i < positions.Count; i++)
             {
-                continue;
+                edges.Add(i);
+                edges.Add((i + 1) % positions.Count);
             }
-            coor.Add((x,y));
-            Transform t = Instantiate(pointPrefab,pointsParent).transform;
-            t.gameObject.name = $"{n++}";
-            t.position = new Vector3((float)x/100f,(float)y/100f,0f);
-        }
-        OnValidate();
-    }
+            ConstrainedDelaunayTriangulation cdt = new ConstrainedDelaunayTriangulation();
+            var res = cdt.Triangulate(positions.ToList(), edges);
 
-    [ContextMenu("Generate")]
-    public void Generate()
-    {
-        while(0 != pointsParent.childCount)
-        {
-            DestroyImmediate(pointsParent.GetChild(0).gameObject);
+            Mesh m = new Mesh();
+            m.vertices = positions.Select(x => (Vector3)(x.ToVector2())).ToArray();
+            m.triangles = res.ToArray();
+            resultMesh.mesh = m;
         }
 
-        for(int i=0; i<pointCount; i++)
+        [ContextMenu("Read File")]
+        public void ReadFile()
         {
-            Transform t = Instantiate(pointPrefab,pointsParent).transform;
-            t.name = i.ToString();
-            t.position = pointRange * Random.insideUnitCircle;
-            t.localScale = pointScale*Vector3.one;
+            int n = 3;
+            string[] data = polygonFile.text.Split(new char[] { ',', '\n' });
+            HashSet<(int, int)> coor = new HashSet<(int, int)>();
+            for (int i = 2; i < data.Length; i += 3)
+            {
+                int x = int.Parse(data[i - 2]);
+                int y = int.Parse(data[i - 1]);
+                if (coor.Contains((x, y)))
+                {
+                    continue;
+                }
+                coor.Add((x, y));
+                Transform t = Instantiate(pointPrefab, pointsParent).transform;
+                t.gameObject.name = $"{n++}";
+                t.position = new Vector3((float)x / 100f, (float)y / 100f, 0f);
+            }
+            OnValidate();
         }
-    }
 
-    [ContextMenu("Clear")]
-    public void Clear()
-    {
-        while(0 != pointsParent.childCount)
+        [ContextMenu("Generate")]
+        public void Generate()
         {
-            DestroyImmediate(pointsParent.GetChild(0).gameObject);
-        }
-        resultMesh.mesh = null;
-    }
+            while (0 != pointsParent.childCount)
+            {
+                DestroyImmediate(pointsParent.GetChild(0).gameObject);
+            }
 
-    public void OnValidate()
-    {
-        foreach(Transform child in pointsParent)
+            for (int i = 0; i < pointCount; i++)
+            {
+                Transform t = Instantiate(pointPrefab, pointsParent).transform;
+                t.name = i.ToString();
+                t.position = pointRange * Random.insideUnitCircle;
+                t.localScale = pointScale * Vector3.one;
+            }
+        }
+
+        [ContextMenu("Clear")]
+        public void Clear()
         {
-            child.localScale = pointScale*Vector3.one;
+            while (0 != pointsParent.childCount)
+            {
+                DestroyImmediate(pointsParent.GetChild(0).gameObject);
+            }
+            resultMesh.mesh = null;
+        }
+
+        public void OnValidate()
+        {
+            foreach (Transform child in pointsParent)
+            {
+                child.localScale = pointScale * Vector3.one;
+            }
         }
     }
-}
 
 }
