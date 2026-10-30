@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum MeleeHitMode
+{
+    Collider,
+    Fan,        //부채꼴 방식
+}
+
 public class PlayerMeleeAttack : MonoBehaviour
 {
     [Header("References")]
@@ -8,7 +14,14 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private Collider _hitboxCollider;
 
+    [Header("Common Settings")]
     [SerializeField] private LayerMask _attackableLayer;
+    [SerializeField] private MeleeHitMode _meleeHitMode = MeleeHitMode.Collider;
+
+
+    [Header("Fan Settings")]
+    [SerializeField] private float _range = 2f;
+    [SerializeField] private float _angle = 90f;
 
 
     public LayerMask AttackableLayer => _attackableLayer;
@@ -29,6 +42,8 @@ public class PlayerMeleeAttack : MonoBehaviour
             //_hitboxCollider = GetComponentInChildren<Collider>();
             Debug.LogWarning($"{name} : 근접공격 공격 히트박스 할당 안됨!");
         }
+
+        _hitboxCollider.enabled = false;
     }
     private void Update()
     {
@@ -54,7 +69,50 @@ public class PlayerMeleeAttack : MonoBehaviour
 
     }
 
-    public void ActivateMeleeCollider() => _hitboxCollider.enabled = true;
-    public void DeactivateMeleeCollider() => _hitboxCollider.enabled = false;
+    //애니메이션 이벤트에서 호출할 이벤트
+    public void FanAttackEvent()
+    {
+        if (_meleeHitMode != MeleeHitMode.Fan) return;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _range, _attackableLayer);
 
+        foreach (Collider collider in colliders)
+        {
+            Vector3 hitPoint = collider.ClosestPoint(transform.position);
+
+            if (!CheckAngleInside(transform.position, hitPoint)) continue;
+            if (collider.TryGetComponent(out IDamageable damageable))
+            {
+                DamageInfo info = new DamageInfo();
+                info.DamageValue = _commonStatus.Damage; //TODO : meele Attack Damage로 바꾸기
+                info.HitPoint = hitPoint;
+                info.HitNormal = transform.position - info.HitPoint;
+
+                damageable.TakeDamage(info);
+            }
+        }
+
+    }
+
+    private bool CheckAngleInside(Vector3 origionPos, Vector3 targetPosition)
+    {
+        Vector3 playerToTarget = GetComponent<Collider>().ClosestPoint(transform.position) - origionPos;
+        playerToTarget.y = 0;
+        playerToTarget.Normalize();
+
+        Vector3 playerForward = transform.forward;
+        playerForward.Normalize();
+
+        return Vector3.Angle(playerForward, playerToTarget) < _angle;
+    }
+
+    public void ActivateMeleeCollider()
+    {
+        if (_meleeHitMode != MeleeHitMode.Collider) return;
+        _hitboxCollider.enabled = true;
+    }
+    public void DeactivateMeleeCollider()
+    {
+        if (_meleeHitMode != MeleeHitMode.Collider) return;
+        _hitboxCollider.enabled = false;
+    }
 }
