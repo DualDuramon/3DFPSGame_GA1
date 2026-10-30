@@ -5,6 +5,7 @@ public class PlayerPostProcessingController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Volume _nightVisionVolume;
+    [SerializeField] private Light _nightVisionLight;
 
     [Header("Night Vision Settings")]
     [SerializeField] private KeyCode _toggleKey = KeyCode.T;
@@ -44,5 +45,7 @@ public class PlayerPostProcessingController : MonoBehaviour
     public void SetNightVision(bool isOn)
     {
         _isNightVisionOn = isOn;
+
+        _nightVisionLight.gameObject.SetActive(isOn);
     }
 }
