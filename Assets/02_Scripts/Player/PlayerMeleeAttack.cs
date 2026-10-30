@@ -5,6 +5,7 @@ public class PlayerMeleeAttack : MonoBehaviour
 
     [SerializeField] private PlayerGunFire _gunFire;
     [SerializeField] private Animator _animator;
+    [SerializeField] private Collider _hitboxCollider;
     private int _meleeLayerIndex;
 
 
@@ -23,4 +24,8 @@ public class PlayerMeleeAttack : MonoBehaviour
             _animator.SetTrigger("Slash");
         }
     }
+
+    public void ActivateMeleeCollider() => _hitboxCollider.enabled = true;
+    public void DeactivateMeleeCollider() => _hitboxCollider.enabled = false;
+
 }
