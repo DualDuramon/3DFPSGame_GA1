@@ -98,14 +98,22 @@ public class PlayerGunFire : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _weaponMode = WeaponMode.Normal;
-            OnWeaponModeSwitched?.Invoke();
+            ChangeWeaponMode(WeaponMode.Normal);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _weaponMode = WeaponMode.Sniper;
-            OnWeaponModeSwitched?.Invoke();
+            ChangeWeaponMode(WeaponMode.Sniper);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ChangeWeaponMode(WeaponMode.Melee);
+        }
+    }
+
+    private void ChangeWeaponMode(WeaponMode newMode)
+    {
+        _weaponMode = newMode;
+        OnWeaponModeSwitched?.Invoke();
     }
 
     private void Shoot()
