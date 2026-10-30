@@ -2489,7 +2489,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 759
+    m_Bits: 2807
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2666,7 +2666,7 @@ GameObject:
   - component: {fileID: 330988421}
   - component: {fileID: 330988420}
   - component: {fileID: 330988419}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2778,7 +2778,7 @@ GameObject:
   - component: {fileID: 374214022}
   - component: {fileID: 374214021}
   - component: {fileID: 374214020}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3345,7 +3345,7 @@ GameObject:
   - component: {fileID: 451721011}
   - component: {fileID: 451721010}
   - component: {fileID: 451721009}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3832,7 +3832,7 @@ GameObject:
   - component: {fileID: 483209027}
   - component: {fileID: 483209026}
   - component: {fileID: 483209025}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bridge (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5427,7 +5427,7 @@ GameObject:
   - component: {fileID: 791673125}
   - component: {fileID: 791673124}
   - component: {fileID: 791673123}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5776,7 +5776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 841889459}
   - component: {fileID: 841889460}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6325,7 +6325,7 @@ GameObject:
   - component: {fileID: 943906170}
   - component: {fileID: 943906169}
   - component: {fileID: 943906168}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Slope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8101,7 +8101,7 @@ GameObject:
   - component: {fileID: 1264256882}
   - component: {fileID: 1264256881}
   - component: {fileID: 1264256884}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bridge (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8693,7 +8693,7 @@ GameObject:
   - component: {fileID: 1291054388}
   - component: {fileID: 1291054387}
   - component: {fileID: 1291054386}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8885,7 +8885,7 @@ GameObject:
   - component: {fileID: 1315604143}
   - component: {fileID: 1315604142}
   - component: {fileID: 1315604141}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9685,9 +9685,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeAttack
   _gunFire: {fileID: 1429056568}
-  _commonStatus: {fileID: 0}
+  _commonStatus: {fileID: 1429056570}
   _animator: {fileID: 1320510501}
   _hitboxCollider: {fileID: 616896727}
+  _attackStartPosition: {fileID: 1378433993}
   _attackableLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -9919,7 +9920,7 @@ GameObject:
   - component: {fileID: 1492555485}
   - component: {fileID: 1492555484}
   - component: {fileID: 1492555483}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bridge (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11481,7 +11482,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1861484232}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Stair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12855,7 +12856,7 @@ GameObject:
   - component: {fileID: 2113445303}
   - component: {fileID: 2113445302}
   - component: {fileID: 2113445301}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bridge (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

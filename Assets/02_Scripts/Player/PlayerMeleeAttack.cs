@@ -13,6 +13,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private PlayerCommonStatus _commonStatus;
     [SerializeField] private Animator _animator;
     [SerializeField] private Collider _hitboxCollider;
+    [SerializeField] private Transform _attackStartPosition;
 
     [Header("Common Settings")]
     [SerializeField] private LayerMask _attackableLayer;
@@ -73,19 +74,23 @@ public class PlayerMeleeAttack : MonoBehaviour
     public void FanAttackEvent()
     {
         if (_meleeHitMode != MeleeHitMode.Fan) return;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _range, _attackableLayer);
+        Collider[] colliders = Physics.OverlapSphere(_attackStartPosition.position, _range, _attackableLayer);
 
         foreach (Collider collider in colliders)
         {
-            Vector3 hitPoint = collider.ClosestPoint(transform.position);
+            Vector3 hitPoint = collider.ClosestPoint(_attackStartPosition.position);
 
-            if (!CheckAngleInside(transform.position, hitPoint)) continue;
+            if (!CheckAngleInside(_attackStartPosition.position, hitPoint) ||
+                Physics.Linecast(_attackStartPosition.position, hitPoint, LayerMask.GetMask("Wall")))
+            {
+                continue;
+            }
             if (collider.TryGetComponent(out IDamageable damageable))
             {
                 DamageInfo info = new DamageInfo();
                 info.DamageValue = _commonStatus.Damage; //TODO : meele Attack Damage로 바꾸기
                 info.HitPoint = hitPoint;
-                info.HitNormal = transform.position - info.HitPoint;
+                info.HitNormal = _attackStartPosition.position - info.HitPoint;
 
                 damageable.TakeDamage(info);
             }
@@ -95,14 +100,14 @@ public class PlayerMeleeAttack : MonoBehaviour
 
     private bool CheckAngleInside(Vector3 origionPos, Vector3 targetPosition)
     {
-        Vector3 playerToTarget = GetComponent<Collider>().ClosestPoint(transform.position) - origionPos;
+        Vector3 playerToTarget = targetPosition - origionPos;
         playerToTarget.y = 0;
         playerToTarget.Normalize();
 
         Vector3 playerForward = transform.forward;
         playerForward.Normalize();
 
-        return Vector3.Angle(playerForward, playerToTarget) < _angle;
+        return Vector3.Angle(playerForward, playerToTarget) < _angle * 0.5f;
     }
 
     public void ActivateMeleeCollider()
