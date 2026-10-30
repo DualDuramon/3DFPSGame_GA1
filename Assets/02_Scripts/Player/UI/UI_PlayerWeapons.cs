@@ -15,6 +15,7 @@ public class UI_PlayerWeapons : MonoBehaviour
     [Header("Weapon Icons")]
     [SerializeField] private Sprite _normalWeaponIcon;
     [SerializeField] private Sprite _sniperWeaponIcon;
+    [SerializeField] private Sprite _meleeWeaponIcon;
 
     private void Awake()
     {
@@ -80,6 +81,7 @@ public class UI_PlayerWeapons : MonoBehaviour
         {
             WeaponMode.Normal => _normalWeaponIcon,
             WeaponMode.Sniper => _sniperWeaponIcon,
+            WeaponMode.Melee => _meleeWeaponIcon,
             _ => null
         };
 

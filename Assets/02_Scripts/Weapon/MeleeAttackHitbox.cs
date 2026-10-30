@@ -21,7 +21,7 @@ public class MeleeAttackHitbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.gameObject.layer & (1 << _attackableLayer.value)) != 0)
+        if ((_attackableLayer.value & (1 << other.gameObject.layer)) != 0)
         {
             _owner.NotifyHitboxDetected(other);
         }

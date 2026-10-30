@@ -11980,6 +11980,7 @@ MonoBehaviour:
   _bombSubject: {fileID: 1429056569}
   _normalWeaponIcon: {fileID: 21300000, guid: 39dca6d555a12a6459fff32a359d2d34, type: 3}
   _sniperWeaponIcon: {fileID: 21300000, guid: a9a921355e4539d4cb08a93bc32318a6, type: 3}
+  _meleeWeaponIcon: {fileID: 21300000, guid: fc51e5db3e3f30846a800dc018197aef, type: 3}
 --- !u!95 &1951881837 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 9500000, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
