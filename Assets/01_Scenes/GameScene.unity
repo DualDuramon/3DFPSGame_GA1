@@ -2044,7 +2044,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1079
+    m_Bits: 1047
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: c7888a8a04d27f14e8a8f509209a36c5, type: 2}
   m_TargetDisplay: 0
@@ -4769,6 +4769,7 @@ GameObject:
   - component: {fileID: 616896726}
   - component: {fileID: 616896728}
   - component: {fileID: 616896727}
+  - component: {fileID: 616896729}
   m_Layer: 2
   m_Name: Hitbox
   m_TagString: Untagged
@@ -4806,7 +4807,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4839,6 +4840,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &616896729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616896725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caba3274aa769db478c0060a8ada3837, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeAttackHitbox
+  _owner: {fileID: 1429056574}
 --- !u!1 &619686004
 GameObject:
   m_ObjectHideFlags: 0
@@ -7014,6 +7028,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Medieval Sword-d8efbd0677e3bc0bdfa2378c0bf58d44
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 302d37f6523d6e248acee770fe16175e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -8962,9 +8980,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Super Saiyan Trunks-08c49bb9f7f45ef4275a3d14ee3ae690
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6883748db1fcea6409f63d957fd7d981, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2890340462180134544, guid: 6883748db1fcea6409f63d957fd7d981, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5509241442665778259, guid: 6883748db1fcea6409f63d957fd7d981, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9602,8 +9628,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeAttack
   _gunFire: {fileID: 1429056568}
+  _commonStatus: {fileID: 0}
   _animator: {fileID: 1320510501}
   _hitboxCollider: {fileID: 616896727}
+  _attackableLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0
