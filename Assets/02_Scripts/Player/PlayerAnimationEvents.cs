@@ -7,12 +7,17 @@ using UnityEngine;
 public class PlayerAnimationEvents : MonoBehaviour
 {
     [SerializeField] private PlayerBombFire _bombFire;
+    [SerializeField] private PlayerMeleeAttack _meleeAttack;
 
     private void Awake()
     {
         if (_bombFire == null)
         {
             _bombFire = GetComponentInParent<PlayerBombFire>();
+        }
+        if (_meleeAttack == null)
+        {
+            _meleeAttack = GetComponentInParent<PlayerMeleeAttack>();
         }
     }
 
@@ -23,5 +28,15 @@ public class PlayerAnimationEvents : MonoBehaviour
         {
             _bombFire.OnThrowBombEvent();
         }
+    }
+
+    public void OnHitboxEnableEvent()
+    {
+        _meleeAttack.ActivateMeleeCollider();
+    }
+
+    public void OnHitBoxDisableEvent()
+    {
+        _meleeAttack.DeactivateMeleeCollider();
     }
 }

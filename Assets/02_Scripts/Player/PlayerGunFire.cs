@@ -74,7 +74,7 @@ public class PlayerGunFire : MonoBehaviour
 
         //1. 마우스 오른쪽 버튼 입력 받기
         if (canAttack
-            && Time.time - _currentFireTime > _status.FireInterval || _weaponMode != WeaponMode.Melee) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
+            && Time.time - _currentFireTime > _status.FireInterval && _weaponMode != WeaponMode.Melee) //0 = 오른쪽 버튼, 1 = 왼쪽버튼, 2 = 휠클릭
         {
             Shoot();
             _bulletCount--;

@@ -9039,6 +9039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationEvents
   _bombFire: {fileID: 1429056569}
+  _meleeAttack: {fileID: 1429056574}
 --- !u!1 &1335444794
 GameObject:
   m_ObjectHideFlags: 0
@@ -9602,6 +9603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMeleeAttack
   _gunFire: {fileID: 1429056568}
   _animator: {fileID: 1320510501}
+  _hitboxCollider: {fileID: 616896727}
 --- !u!1 &1444504119
 GameObject:
   m_ObjectHideFlags: 0
@@ -11966,6 +11968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationEvents
   _bombFire: {fileID: 1429056569}
+  _meleeAttack: {fileID: 0}
 --- !u!1 &1977872783
 GameObject:
   m_ObjectHideFlags: 0

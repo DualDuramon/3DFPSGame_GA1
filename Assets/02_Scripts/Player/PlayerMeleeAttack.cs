@@ -6,14 +6,17 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private PlayerGunFire _gunFire;
     [SerializeField] private Animator _animator;
     [SerializeField] private Collider _hitboxCollider;
-    private int _meleeLayerIndex;
 
 
     private void Awake()
     {
         _gunFire = GetComponent<PlayerGunFire>();
         _animator = GetComponentInChildren<Animator>();
-        _meleeLayerIndex = _animator.GetLayerIndex("MeleeLayer");
+        if (_hitboxCollider == null)
+        {
+            //_hitboxCollider = GetComponentInChildren<Collider>();
+            Debug.LogWarning($"{name} : 근접공격 공격 히트박스 할당 안됨!");
+        }
     }
     private void Update()
     {
