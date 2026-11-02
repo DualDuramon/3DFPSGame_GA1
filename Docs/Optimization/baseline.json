@@ -1,0 +1,10 @@
+{
+  "phase": "baseline",
+  "date": "2026-10-30",
+  "conditions": "Editor Play Mode, Game View 1920x1080, Quality=PC, Time.timeScale=0 (Ready 상태 고정), CameraViewSwitcher 비활성 후 고정 포즈. 렌더 수치는 UnityStats(Main+Minimap 카메라, 그림자 포함), mainThread는 ProfilerRecorder 'Main Thread'.",
+  "views": {
+    "view1_start":  { "pos": [16, 1.8, -26.6], "lookAt": [16, 1.4, -10], "batches": 184, "setPass": 73, "drawCalls": 433, "tris": 106300,  "verts": 180507,  "shadowCasters": 243, "mainThreadMsMedian": 10.05 },
+    "view2_street": { "pos": [20, 1.7, 0],     "lookAt": [60, 3, 5],     "batches": 195, "setPass": 68, "drawCalls": 474, "tris": 97251,   "verts": 185333,  "shadowCasters": 269, "mainThreadMsMedian": 10.03 },
+    "view3_aerial": { "pos": [-80, 40, -90],   "lookAt": [24, 0, -12],   "batches": 241, "setPass": 71, "drawCalls": 736, "tris": 4147953, "verts": 2603908, "shadowCasters": 38,  "mainThreadMsMedian": 10.30 }
+  }
+}

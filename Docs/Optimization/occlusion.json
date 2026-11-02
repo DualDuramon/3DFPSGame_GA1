@@ -1,0 +1,8 @@
+{
+  "phase": "occlusion",
+  "views": {
+    "view1_start": { "batches": 154, "setPass": 73, "drawCalls": 362, "tris": 87365, "verts": 140661, "shadowCasters": 233, "mainThreadMsMedian": 10.58 },
+    "view2_street": { "batches": 81, "setPass": 58, "drawCalls": 127, "tris": 19646, "verts": 41038, "shadowCasters": 73, "mainThreadMsMedian": 10.41 },
+    "view3_aerial": { "batches": 228, "setPass": 71, "drawCalls": 656, "tris": 150776, "verts": 269523, "shadowCasters": 38, "mainThreadMsMedian": 10.99 }
+  }
+}

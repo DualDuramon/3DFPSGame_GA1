@@ -1,0 +1,8 @@
+{
+  "phase": "meshlod",
+  "views": {
+    "view1_start": { "batches": 184, "setPass": 73, "drawCalls": 433, "tris": 106498, "verts": 180903, "shadowCasters": 243, "mainThreadMsMedian": 10.32 },
+    "view2_street": { "batches": 192, "setPass": 68, "drawCalls": 474, "tris": 97362, "verts": 185554, "shadowCasters": 269, "mainThreadMsMedian": 10.38 },
+    "view3_aerial": { "batches": 237, "setPass": 71, "drawCalls": 738, "tris": 154789, "verts": 276826, "shadowCasters": 38, "mainThreadMsMedian": 10.68 }
+  }
+}

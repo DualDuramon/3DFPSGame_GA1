@@ -1,0 +1,8 @@
+{
+  "phase": "lodgroup",
+  "views": {
+    "view1_start": { "batches": 184, "setPass": 72, "drawCalls": 433, "tris": 106498, "verts": 180903, "shadowCasters": 243, "mainThreadMsMedian": 10.52 },
+    "view2_street": { "batches": 195, "setPass": 68, "drawCalls": 468, "tris": 97050, "verts": 184990, "shadowCasters": 269, "mainThreadMsMedian": 10.53 },
+    "view3_aerial": { "batches": 227, "setPass": 71, "drawCalls": 655, "tris": 150723, "verts": 269416, "shadowCasters": 38, "mainThreadMsMedian": 10.80 }
+  }
+}
