@@ -19,6 +19,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
     [SerializeField] private TextMeshProUGUI _stateText;
     [SerializeField] private GameObject _optionPopup;
+    [SerializeField] private GameObject _gameOverPopup;
 
 
     // 씬의 StartText/OptionPopup을 직접 참조하므로 씬 재시작 시 새로 만들어져야 한다
@@ -33,6 +34,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     private void Start()
     {
         _optionPopup.SetActive(false);
+        _gameOverPopup.SetActive(false);
         StartCoroutine(StartSequence_Coroutine());
     }
 
@@ -72,9 +74,8 @@ public class GameManager : SingletonBehaviour<GameManager>
     {
         _state = GameState.GameOver;
 
-        _stateText.gameObject.SetActive(true);
-        _stateText.text = "게임 오버!";
-        _stateText.color = Color.red;
+        _gameOverPopup.SetActive(true);
+        CursorManager.Instance.UnlockCursor();
     }
 
     public void Resume()
