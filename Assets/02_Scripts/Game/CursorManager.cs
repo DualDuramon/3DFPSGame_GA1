@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class CursorManager : MonoBehaviour
+public class CursorManager : SingletonBehaviour<CursorManager>
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         LockCursor();
     }
 
@@ -22,12 +23,12 @@ public class CursorManager : MonoBehaviour
         }
     }
 
-    private static void LockCursor()
+    public void LockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;   // 마우스 커서를 화면 가운데에 고정
         Cursor.visible = false;                     // 마우스 안보이게
     }
-    private static void UnlockCursor()
+    public void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;   // 마우스 커서를 화면 가운데에 고정
         Cursor.visible = true;                     // 마우스 안보이게

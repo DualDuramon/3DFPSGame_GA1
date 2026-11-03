@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -11,23 +12,8 @@ public enum GameState
 }
 
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonBehaviour<GameManager>
 {
-    private static GameManager _instance;
-
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindAnyObjectByType<GameManager>();
-            }
-
-            return _instance;
-        }
-    }
-
     private GameState _state = GameState.Ready;
     public GameState GameState => _state;
 
@@ -35,15 +21,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _optionPopup;
 
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-        _instance = this;
+    // 씬의 StartText/OptionPopup을 직접 참조하므로 씬 재시작 시 새로 만들어져야 한다
+    protected override bool PersistAcrossScenes => false;
 
+    protected override void Awake()
+    {
+        base.Awake();
         _state = GameState.Ready;
     }
 
@@ -67,12 +50,7 @@ public class GameManager : MonoBehaviour
             }
             else if (_state == GameState.Pause)
             {
-                _state = GameState.Playing;
-                Time.timeScale = 1.0f;
-                _optionPopup.SetActive(false);
-
-                CursorManager.Instance.LockCursor();
-
+                Resume();
             }
         }
     }
@@ -97,5 +75,30 @@ public class GameManager : MonoBehaviour
         _stateText.gameObject.SetActive(true);
         _stateText.text = "게임 오버!";
         _stateText.color = Color.red;
+    }
+
+    public void Resume()
+    {
+        _state = GameState.Playing;
+        Time.timeScale = 1.0f;
+        _optionPopup.SetActive(false);
+
+        CursorManager.Instance.LockCursor();
+
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Quit()
+    {
+# if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
