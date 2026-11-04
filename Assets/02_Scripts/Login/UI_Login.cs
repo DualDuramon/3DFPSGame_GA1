@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,15 @@ public class UI_Login : MonoBehaviour
 
     private const string LoginHeader = "SURVIVOR LOGIN";
     private const string RegisterHeader = "SURVIVOR REGISTER";
+
+    // ID: 영문·숫자·-·@·_로 이루어진 3~20글자
+    private static readonly Regex IdRegex = new Regex(@"^[A-Za-z0-9\-@_]{3,20}$");
+    // 이메일: '@' 하나, 도메인은 '.'으로 시작하거나 끝나지 않고 '.'을 포함, 공백 없음
+    private static readonly Regex EmailRegex = new Regex(@"^[^@\s]+@[^@\s.][^@\s]*\.[^@\s.]+$");
+    // 암호 허용 문자: 공백을 뺀 ASCII 영문·숫자·기호
+    private static readonly Regex PasswordCharsRegex = new Regex(@"^[!-~]*$");
+    // 암호 조합: 대문자·소문자·숫자·기호를 각각 하나 이상 포함
+    private static readonly Regex PasswordComplexityRegex = new Regex(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).*$");
 
     [Header("입력 칸")]
     [SerializeField] private TMP_InputField _idInput;
@@ -56,6 +66,9 @@ public class UI_Login : MonoBehaviour
     private bool _isLoading;
     private bool _isTransitioning;
     private TMP_InputField _focusAfterWarning;
+
+    private PlayerPrefsAccountRepository _repository = new PlayerPrefsAccountRepository();
+
 
     private bool IsPopupOpen => _warningPopup.IsOpen || _successPopup.IsOpen;
 
@@ -110,6 +123,13 @@ public class UI_Login : MonoBehaviour
             return;
         }
 
+        if (!_repository.CheckPassword(_idInput.text, _passWordInput.text))
+        {
+            ShowMessage("> 오류: 아이디나 비밀번호를 확인해주세요.", _errorColor);
+            _passWordInput.ActivateInputField();
+            return;
+        }
+
         StartCoroutine(Login_Coroutine());
     }
 
@@ -123,6 +143,35 @@ public class UI_Login : MonoBehaviour
             return;
         }
 
+        string id = _idInput.text;
+        string password = _passWordInput.text;
+
+        // ID 규칙: 이메일 형식이거나, 영문·숫자·-·@·_로 이루어진 3~20글자
+        if (!IdRegex.IsMatch(id) && !EmailRegex.IsMatch(id))
+        {
+            ShowWarning("ID는 이메일 또는 영문, 숫자, -, @, _로 된 3~20글자여야 합니다.", _idInput);
+            return;
+        }
+
+        // 비밀번호 규칙: 대문자·소문자·숫자·기호를 모두 포함한 8~30글자
+        if (password.Length < 8 || password.Length > 30)
+        {
+            ShowWarning("암호는 8~30글자여야 합니다.", _passWordInput);
+            return;
+        }
+
+        if (!PasswordCharsRegex.IsMatch(password))
+        {
+            ShowWarning("암호에는 영문, 숫자, 기호만 사용할 수 있습니다.", _passWordInput);
+            return;
+        }
+
+        if (!PasswordComplexityRegex.IsMatch(password))
+        {
+            ShowWarning("암호에는 대문자, 소문자, 숫자, 기호가 모두 포함되어야 합니다.", _passWordInput);
+            return;
+        }
+
         if (_passWordInput.text != _passWordConfirmInput.text)
         {
             _passWordConfirmInput.text = string.Empty;
@@ -130,7 +179,16 @@ public class UI_Login : MonoBehaviour
             return;
         }
 
-        // TODO: 서버가 생기면 실제 계정 생성 요청으로 교체 -> ID 중복 검사, 실제 회원가입 데이터 저장
+        // TODO: 서버가 생기면 실제 계정 생성 요청으로 교체 -> ID 중복 검사, 실제 회원가입 데이터 저장 등등
+
+        if (_repository.Exist(_idInput.text))
+        {
+            ShowWarning("이미 존재하는 아이디입니다.", _idInput);
+            return;
+        }
+
+        _repository.Register(_idInput.text, _passWordInput.text);
+
         GameLogger.Log($"회원가입: {_idInput.text}");
         _successPopup.Open();
     }
@@ -244,8 +302,6 @@ public class UI_Login : MonoBehaviour
             errorInput = _passWordInput;
             return false;
         }
-
-        //TODO : ID 및 비밀번호 규칙 -> 막 비번 7~8글자 이상이니 id에 특수문자 못 넣는다느니 등등
 
         error = null;
         errorInput = null;
