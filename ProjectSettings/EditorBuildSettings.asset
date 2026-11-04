@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/01_Scenes/LoginScene_CCTV.unity
-    guid: f142151d797f8c54dbfb87b43647a40a
+    path: Assets/01_Scenes/LoginScene_Factory.unity
+    guid: d4e775175e548d04a81aebedabd6d119
+  - enabled: 1
+    path: Assets/01_Scenes/LoadingScene.unity
+    guid: ab96c34ed1ed45643b21396a7fb4d49a
   - enabled: 1
     path: Assets/01_Scenes/GameScene.unity
     guid: 99c9720ab356a0642a771bea13969a05

@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // 로그인 패널의 입력 처리, 로그인/회원가입 화면 전환, 씬 전환을 담당한다
@@ -48,6 +47,7 @@ public class UI_Login : MonoBehaviour
     [SerializeField] private UI_Popup _successPopup;
 
     [Header("씬 전환")]
+    [Tooltip("LoadingScene을 거쳐 이동할 씬")]
     [SerializeField] private string _nextSceneName = "GameScene";
     [SerializeField] private float _loadDelay = 1.2f;
 
@@ -321,7 +321,9 @@ public class UI_Login : MonoBehaviour
         ShowMessage($"> 신원 확인 완료. {_idInput.text}님, 행운을 빕니다.", _normalColor);
 
         yield return new WaitForSeconds(_loadDelay);
-        SceneManager.LoadScene(_nextSceneName);
+
+        // LoadingScene으로 이동하고, 실제 다음 씬 로드는 UI_Loading이 맡는다
+        SceneLoader.Load(_nextSceneName);
     }
 
     private void ShowMessage(string message, Color color)
