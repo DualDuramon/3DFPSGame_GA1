@@ -14,6 +14,9 @@ public class UI_Login : MonoBehaviour
         Register
     }
 
+    private const string LoginHeader = "SURVIVOR LOGIN";
+    private const string RegisterHeader = "SURVIVOR REGISTER";
+
     [Header("입력 칸")]
     [SerializeField] private TMP_InputField _idInput;
     [SerializeField] private TMP_InputField _passWordInput;
@@ -27,16 +30,39 @@ public class UI_Login : MonoBehaviour
     [SerializeField] private Button _recoverButton;
 
     [Header("메시지")]
+    [SerializeField] private TextMeshProUGUI _headerText;
     [SerializeField] private TextMeshProUGUI _messageText;
     [SerializeField] private Color _normalColor = new Color(0.55f, 1f, 0.71f);
     [SerializeField] private Color _errorColor = new Color(1f, 0.35f, 0.29f);
+
+    [Header("모드 전환 연출")]
+    [SerializeField] private CanvasGroup _loginGroup;
+    [SerializeField] private CanvasGroup _registerGroup;
+    [SerializeField] private float _loginPanelHeight = 600f;
+    [SerializeField] private float _registerPanelHeight = 720f;
+    [SerializeField] private float _transitionDuration = 0.35f;
+    [SerializeField] private float _slideOffset = 20f;
+
+    [Header("팝업")]
+    [SerializeField] private UI_Popup _warningPopup;
+    [SerializeField] private UI_Popup _successPopup;
 
     [Header("씬 전환")]
     [SerializeField] private string _nextSceneName = "GameScene";
     [SerializeField] private float _loadDelay = 1.2f;
 
+    private RectTransform _panel;
     private LoginMode _mode;
     private bool _isLoading;
+    private bool _isTransitioning;
+    private TMP_InputField _focusAfterWarning;
+
+    private bool IsPopupOpen => _warningPopup.IsOpen || _successPopup.IsOpen;
+
+    private void Awake()
+    {
+        _panel = (RectTransform)transform;
+    }
 
     private void Start()
     {
@@ -54,12 +80,17 @@ public class UI_Login : MonoBehaviour
         _passWordInput.onSubmit.AddListener(_ => OnSubmitPassword());
         _passWordConfirmInput.onSubmit.AddListener(_ => Register());
 
-        SetMode(LoginMode.Login);
+        _warningPopup.OnConfirm += () => _focusAfterWarning.ActivateInputField();
+        _successPopup.OnConfirm += () => SetMode(LoginMode.Login);
+
+        _warningPopup.gameObject.SetActive(false);
+        _successPopup.gameObject.SetActive(false);
+        ApplyModeImmediate(LoginMode.Login);
     }
 
     private void Update()
     {
-        if (_isLoading) return;
+        if (_isLoading || _isTransitioning || IsPopupOpen) return;
 
         // Tab으로 입력칸 순환
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -70,31 +101,38 @@ public class UI_Login : MonoBehaviour
 
     public void Login()
     {
-        if (_isLoading) return;
-        if (!ValidateIdAndPassword()) return;
+        if (_isLoading || _isTransitioning) return;
+
+        if (!TryValidateIdAndPassword(out string error, out TMP_InputField errorInput))
+        {
+            ShowMessage($"> 오류: {error}", _errorColor);
+            errorInput.ActivateInputField();
+            return;
+        }
 
         StartCoroutine(Login_Coroutine());
     }
 
     public void Register()
     {
-        if (_isLoading) return;
-        if (!ValidateIdAndPassword()) return;
+        if (_isLoading || _isTransitioning || IsPopupOpen) return;
+
+        if (!TryValidateIdAndPassword(out string error, out TMP_InputField errorInput))
+        {
+            ShowWarning(error, errorInput);
+            return;
+        }
 
         if (_passWordInput.text != _passWordConfirmInput.text)
         {
-            ShowMessage("> 오류: 암호가 일치하지 않습니다.", _errorColor);
             _passWordConfirmInput.text = string.Empty;
-            _passWordConfirmInput.ActivateInputField();
+            ShowWarning("암호가 일치하지 않습니다.", _passWordConfirmInput);
             return;
         }
 
         // TODO: 서버가 생기면 실제 계정 생성 요청으로 교체 -> ID 중복 검사, 실제 회원가입 데이터 저장
         GameLogger.Log($"회원가입: {_idInput.text}");
-        SetMode(LoginMode.Login);
-
-        ShowMessage($"> 생존자 {_idInput.text} 등록 완료. 로그인하십시오.", _normalColor);
-        _passWordInput.ActivateInputField();
+        _successPopup.Open();
     }
 
     public void Recover()
@@ -104,42 +142,120 @@ public class UI_Login : MonoBehaviour
 
     private void SetMode(LoginMode mode)
     {
+        if (_isTransitioning || _mode == mode) return;
+
+        StartCoroutine(Transition_Coroutine(mode));
+    }
+
+    private void ApplyModeImmediate(LoginMode mode)
+    {
         _mode = mode;
         bool isLogin = mode == LoginMode.Login;
 
-        _loginButton.gameObject.SetActive(isLogin);
-        _gotoRegisterButton.gameObject.SetActive(isLogin);
-        _recoverButton.gameObject.SetActive(isLogin);
+        SetGroupVisible(_loginGroup, isLogin);
+        SetGroupVisible(_registerGroup, !isLogin);
+        SetPanelHeight(isLogin ? _loginPanelHeight : _registerPanelHeight);
+        _headerText.text = isLogin ? LoginHeader : RegisterHeader;
 
-        _passWordConfirmInput.gameObject.SetActive(!isLogin);
-        _registerButton.gameObject.SetActive(!isLogin);
-        _gotoLoginButton.gameObject.SetActive(!isLogin);
-
-        _passWordInput.text = string.Empty;
-        _passWordConfirmInput.text = string.Empty;
-        _messageText.text = string.Empty;
+        ResetInputs();
         _idInput.ActivateInputField();
     }
 
-    private bool ValidateIdAndPassword()
+    // 이전 그룹을 페이드아웃하는 동안 패널 높이를 바꾸고, 후반부에 다음 그룹을 아래에서 밀어 올리며 페이드인한다
+    private IEnumerator Transition_Coroutine(LoginMode mode)
+    {
+        _isTransitioning = true;
+        _mode = mode;
+        bool toRegister = mode == LoginMode.Register;
+
+        CanvasGroup from = toRegister ? _loginGroup : _registerGroup;
+        CanvasGroup to = toRegister ? _registerGroup : _loginGroup;
+        RectTransform toRect = (RectTransform)to.transform;
+        float fromHeight = _panel.sizeDelta.y;
+        float toHeight = toRegister ? _registerPanelHeight : _loginPanelHeight;
+
+        ResetInputs();
+        from.interactable = false;
+        to.interactable = false;
+        to.alpha = 0f;
+        to.gameObject.SetActive(true);
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t = Mathf.Min(1f, t + Time.unscaledDeltaTime / _transitionDuration);
+            SetPanelHeight(Mathf.Lerp(fromHeight, toHeight, Mathf.SmoothStep(0f, 1f, t)));
+
+            from.alpha = 1f - Mathf.Clamp01(t * 2f);
+
+            float fadeIn = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t * 2f - 1f));
+            to.alpha = fadeIn;
+            toRect.anchoredPosition = new Vector2(0f, -_slideOffset * (1f - fadeIn));
+
+            if (t >= 0.5f)
+            {
+                _headerText.text = toRegister ? RegisterHeader : LoginHeader;
+            }
+
+            yield return null;
+        }
+
+        SetGroupVisible(from, false);
+        SetGroupVisible(to, true);
+        _isTransitioning = false;
+
+        // 가입 후 돌아왔으면 ID는 남아 있으니 암호칸부터 입력
+        TMP_InputField focus = string.IsNullOrEmpty(_idInput.text) ? _idInput : _passWordInput;
+        focus.ActivateInputField();
+    }
+
+    private void SetGroupVisible(CanvasGroup group, bool isVisible)
+    {
+        group.gameObject.SetActive(isVisible);
+        group.alpha = isVisible ? 1f : 0f;
+        group.interactable = isVisible;
+        ((RectTransform)group.transform).anchoredPosition = Vector2.zero;
+    }
+
+    private void SetPanelHeight(float height)
+    {
+        _panel.sizeDelta = new Vector2(_panel.sizeDelta.x, height);
+    }
+
+    private void ResetInputs()
+    {
+        _passWordInput.text = string.Empty;
+        _passWordConfirmInput.text = string.Empty;
+        _messageText.text = string.Empty;
+    }
+
+    private bool TryValidateIdAndPassword(out string error, out TMP_InputField errorInput)
     {
         if (string.IsNullOrWhiteSpace(_idInput.text))
         {
-            ShowMessage("> 오류: 생존자 ID를 입력하십시오.", _errorColor);
-            _idInput.ActivateInputField();
+            error = "생존자 ID를 입력하십시오.";
+            errorInput = _idInput;
             return false;
         }
 
         if (string.IsNullOrEmpty(_passWordInput.text))
         {
-            ShowMessage("> 오류: 암호를 입력하십시오.", _errorColor);
-            _passWordInput.ActivateInputField();
+            error = "암호를 입력하십시오.";
+            errorInput = _passWordInput;
             return false;
         }
 
         //TODO : ID 및 비밀번호 규칙 -> 막 비번 7~8글자 이상이니 id에 특수문자 못 넣는다느니 등등
 
+        error = null;
+        errorInput = null;
         return true;
+    }
+
+    private void ShowWarning(string message, TMP_InputField focusAfter)
+    {
+        _focusAfterWarning = focusAfter;
+        _warningPopup.Open(message);
     }
 
     private void OnSubmitPassword()
