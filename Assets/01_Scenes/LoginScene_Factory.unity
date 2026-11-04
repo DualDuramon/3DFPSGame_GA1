@@ -3717,58 +3717,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4000011066351628, guid: 36b4cee33c5a95b4fa7f0ae6bdb49564, type: 3}
   m_PrefabInstance: {fileID: 281545494}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &291673168
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 291673170}
-  - component: {fileID: 291673169}
-  m_Layer: 0
-  m_Name: LoginManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &291673169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 291673168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23227e0cc0ba97a4792b743eb1719258, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LoginManager
-  _idInput: {fileID: 350550407}
-  _passwordInput: {fileID: 2026860265}
-  _loginButton: {fileID: 204753108}
-  _messageText: {fileID: 923389645}
-  _normalColor: {r: 0.85, g: 0.82, b: 0.75, a: 1}
-  _errorColor: {r: 1, g: 0.35, b: 0.29, a: 1}
-  _nextSceneName: GameScene
-  _loadDelay: 1.2
---- !u!4 &291673170
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 291673168}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &309486614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6579,19 +6527,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 458002605}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 291673169}
-        m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
-        m_MethodName: OnClickRegister
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &458002605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7631,6 +7567,7 @@ GameObject:
   - component: {fileID: 556866175}
   - component: {fileID: 556866177}
   - component: {fileID: 556866176}
+  - component: {fileID: 556866178}
   m_Layer: 0
   m_Name: LoginPanel
   m_TagString: Untagged
@@ -7706,6 +7643,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 556866174}
   m_CullTransparentMesh: 1
+--- !u!114 &556866178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556866174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b8a436ca56e974b84c4fa3be140033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_Login
+  _idInput: {fileID: 350550407}
+  _passWordInput: {fileID: 2026860265}
+  _passWordConfirmInput: {fileID: 0}
+  _loginButton: {fileID: 204753108}
+  _gotoRegisterButton: {fileID: 458002604}
+  _registerButton: {fileID: 0}
+  _gotoLoginButton: {fileID: 0}
+  _recoverButton: {fileID: 929105725}
+  _messageText: {fileID: 923389645}
+  _normalColor: {r: 0.85, g: 0.82, b: 0.75, a: 1}
+  _errorColor: {r: 1, g: 0.35, b: 0.29, a: 1}
+  _nextSceneName: GameScene
+  _loadDelay: 1.2
 --- !u!1001 &557724097
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13998,19 +13960,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 929105726}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 291673169}
-        m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
-        m_MethodName: OnClickRecover
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &929105726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33393,5 +33343,4 @@ SceneRoots:
   - {fileID: 1269305663}
   - {fileID: 1978251803}
   - {fileID: 378301834}
-  - {fileID: 291673170}
   - {fileID: 137357612}
